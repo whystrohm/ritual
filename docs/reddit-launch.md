@@ -17,7 +17,7 @@ Reddit smells marketing from three comments away. The post has to be a story abo
 
 ## For r/ClaudeAI (primary)
 
-**Title:** I built a Claude Code skill that reads my shell history and writes my first routine for me. Here's what it found.
+**Title:** I built a Claude Code skill that reads my shell history and drafts my first routine for me. Here's what it found.
 
 **Body:**
 

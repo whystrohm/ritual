@@ -1,8 +1,10 @@
 # Ritual
 
+![Ritual — Routines run. Ritual proves.](assets/hero.png)
+
 **Routines run. Ritual proves.**
 
-A Claude Code skill + bootstrap scan that turns your real work into your first Claude Code routine. Starts by reading your shell history and git repos, tells you what to automate first, and ships with `ritual-voice` — a voice audit that enforces verified facts, canonical names, and drift-free copy across every brand you ship.
+A Claude Code skill + bootstrap scan that shows you where you're repeating yourself and **drafts your first Claude Code routine from your actual work** — real repo names, real patterns, paste-ready for Claude Code's new Routines feature. Ships with `ritual-voice`, a voice audit that enforces verified facts, canonical names, and drift-free copy across every brand you ship.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-skill-6B4FBB)](https://code.claude.com)
@@ -74,6 +76,8 @@ Then in any Claude Code session in that repo:
 
 ## What the scan finds
 
+![Scan demo — paste the bootstrap prompt, get your top recommendations and a drafted routine](assets/scan-demo.gif)
+
 Example output from a real operator's machine (sanitized):
 
 ```json
@@ -104,6 +108,8 @@ Example output from a real operator's machine (sanitized):
 The point is that the recommendations are concrete, cite real frequencies, and name specific patterns — not generic "you should automate things" advice.
 
 ## Before / after — `ritual-voice` on real content
+
+![Lint demo — ten violations caught, rewrite pulled from provenFacts, every verified number marked](assets/lint-demo.gif)
 
 Representative run on a paragraph of founder-written copy:
 

@@ -35,3 +35,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bootstrap scan detects existing automations (launchd, cron, GitHub Actions) and excludes them from recommendation candidates, so the scan does not propose work that is already running.
 - Bootstrap output JSON adds `prior_context` and `existing_automations` fields; `scope` now tracks `history_lines_analyzed` and `history_sources[]` for provenance.
 - Bootstrap README adds a "what good results require" section setting honest expectations about machines with no memory, <90 days of history, or single-repo setups.
+- README assets: `assets/hero.png` (1280×640 GitHub social card), `assets/scan-demo.gif` (15s demo of the bootstrap scan producing a drafted routine), `assets/lint-demo.gif` (10s before/after of ritual-voice catching 10 violations and rewriting from provenFacts). MP4 originals ship alongside for LinkedIn/X use.
