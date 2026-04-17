@@ -190,16 +190,72 @@ Show me the scaffolded config before writing it. I will edit it with you.
 ## Phase 4 — Recommend my first routine
 
 Using the top 5 patterns from Phase 1 and what you now know about my primary
-brand, recommend one routine to build first. Specifically:
+brand, recommend one routine to build first.
 
-- Which pattern does it automate?
-- What trigger (scheduled, API, GitHub)?
-- What's the routine prompt? (draft it, ready to paste into /schedule)
-- What repos should be attached?
-- Expected monthly time saved based on the pattern frequency?
+First, classify the pattern by execution context. Claude Code routines
+(scheduled triggers) run in Anthropic's cloud — they have NO access to
+the local filesystem, local scripts, or local environment. Classify
+honestly:
 
-Do not create the routine yourself. Show me the draft and let me create it
-through the Claude Code UI.
+- **claude-code-trigger** — pattern operates on git-hosted repos, runs
+  on a cadence, can use MCP connectors for external services. BEST FIT.
+- **github-actions** — pattern is event-driven (on PR open, on push to
+  main, on release). Lives inside a specific repo's .github/workflows/.
+- **local-cron-or-launchd** — pattern needs local filesystem, local
+  tools, or local scripts. Cannot run as a Claude Code trigger.
+
+If the top recommendation is a claude-code-trigger, proceed with the
+full drafting below. If it is one of the other two contexts, tell the
+user that the routine lives elsewhere and point them to the right docs
+(docs/how-routines-work.md for context table, docs/routines.md for the
+GitHub Actions example). Do not force a claude-code-trigger fit on a
+pattern that does not belong there.
+
+For claude-code-trigger recommendations, output ALL of the following:
+
+1. **Which pattern does it automate?** Cite the pattern ID from Phase 1.
+2. **Why this first?** Frequency × time × feasibility reasoning in 1–2 sentences.
+3. **Full routine prompt.** Self-contained. Starts with a Context Reset
+   line, ends with a Termination line. Paste-ready — the remote agent
+   starts with zero context, so the prompt must stand alone.
+4. **Cron expression.** Use UTC. The user's local timezone is
+   America/New_York — convert from their preference and show both.
+5. **Repos to attach.** List the actual GitHub URLs (or org/repo
+   strings) the trigger should clone. Pull from the repos inventoried
+   in Phase 1.
+6. **MCP connectors needed.** If the prompt references Gmail, Notion,
+   Google Drive, Slack, Datadog, or anything else, list each one. Tell
+   the user to connect any missing connectors at
+   claude.ai/settings/connectors before creating the trigger.
+7. **Model.** Default claude-sonnet-4-6. Suggest opus only if the
+   routine involves complex codebase reasoning. Suggest haiku only if
+   the routine is trivially short.
+8. **Expected monthly time saved.** Pull from the pattern's
+   estimated_time_saved_per_month_minutes.
+
+Then, after the draft, output EXACTLY this walkthrough to the user:
+
+---
+
+### Next 4 clicks to make this real
+
+1. Open a new Claude Code session anywhere. Type `/schedule` (or go to
+   https://claude.ai/code/scheduled and click "New trigger").
+2. When prompted, paste the full routine prompt from above into the
+   prompt field. Do not edit it down — the remote agent needs the whole
+   thing.
+3. Fill in: **Name** (memorable, e.g. "Ritual weekly voice sweep"),
+   **Cron** (the UTC expression shown above), **Repos** (attach the
+   ones listed), **MCP connectors** (attach any listed), **Model**
+   (shown above), **Enabled: yes**.
+4. Save. Then **immediately click "Run now"** to fire it once manually.
+   Review the output. Only if the output is clean, trust the schedule.
+
+Full walkthrough of what to expect, troubleshooting, and what to do
+when a trigger fires: see docs/how-routines-work.md in the Ritual repo.
+
+Do not create the trigger yourself. Show me the draft and the
+walkthrough — I will create it through the Claude Code UI.
 
 ## Output
 
@@ -220,7 +276,7 @@ Keep the summary tight. Five sentences or fewer per phase.
 
 2. **Sanitize before sharing.** The `skipped` section tells you what was avoided. If anything in `patterns[]` mentions a file or command you don't want public, remove it before contributing examples back to the Ritual repo.
 
-3. **Create the first routine.** Take the Phase 4 draft, paste it into Claude Code → Code → Routines → New routine → Remote. Attach the repos. Set the schedule. Fire it once manually before letting it run on schedule.
+3. **Create the first trigger.** Type `/schedule` in Claude Code, or visit [claude.ai/code/scheduled](https://claude.ai/code/scheduled). Paste the Phase 4 prompt, attach repos, set the UTC cron, attach any MCP connectors, and save with `enabled: true`. **Then click "Run now" once immediately** — do not wait for the schedule until you've verified the output is clean. Full walkthrough: [`docs/how-routines-work.md`](how-routines-work.md).
 
 4. **After two weeks of use:** re-run Phase 1 only. Compare the new patterns against the old. What's still repetitive? That's your second routine.
 

@@ -1,18 +1,28 @@
 # First-Routine Archetypes
 
-When the [bootstrap scan](bootstrap.md) finishes, it ranks automation candidates by frequency × time cost × feasibility. The top recommendation is usually one of the four archetypes below. Each archetype is a full Claude Code routine prompt, ready to paste into `/schedule` or the [routines UI](https://claude.ai/code/routines).
+When the [bootstrap scan](bootstrap.md) finishes, it ranks automation candidates and classifies each by **execution context**:
 
-Pick the one that matches your top recommendation, fill in the bracketed values with what the scan found, and ship it. Each archetype has been written for `suggest` mode — auto-fix is deliberately not in any of these prompts. See [`limitations.md`](limitations.md) for why.
+- **Claude Code trigger** — remote agent, runs in Anthropic's cloud on a cron schedule, operates on git-hosted repos, can use MCP connectors. Created at [claude.ai/code/scheduled](https://claude.ai/code/scheduled). This doc covers these.
+- **GitHub Actions** — event-driven inside a specific repo. Lives in `.github/workflows/`. See [`docs/routines.md`](routines.md) for a ritual-voice example.
+- **Local cron / launchd** — needs local files, scripts, or tools. Lives on your Mac in `~/Library/LaunchAgents/` or `crontab`. Out of scope for Ritual's drafting — the scan will flag the pattern and point you at the right tool.
+
+Before building any of these, read [`how-routines-work.md`](how-routines-work.md) so you understand what a remote agent can and cannot do. Especially: **it has no access to your local machine, so any routine that needs local files is not a Claude Code trigger.**
+
+Each archetype below is a full trigger prompt, ready to paste. Each ships with `suggest` mode — auto-fix never runs unsupervised.
 
 ---
 
-## Archetype 1 — Voice sweep (content operator)
+## Archetype 1 — Voice sweep (content operator) ✓ Claude Code trigger
 
-**When the scan recommends this:** You edit markdown/MDX across 3+ repos, the shared pattern is `brand-config.json` or similar, and your shell history shows `git status → edit → git diff → commit` sequences on content files 15+ times a month per repo.
+**When the scan recommends this:** You edit markdown/MDX across 3+ repos. Shared patterns include `brand-config.json` or similar. Shell history shows `git status → edit → git diff → commit` sequences on content files 15+ times a month per repo.
 
-**Cadence:** Scheduled, daily at 6:00 AM local.
+**Cron:** `0 10 * * 1` (6:00 AM America/New_York Monday; UTC 10:00).
 
-**What it does:** Sweeps every attached brand repo, runs `ritual-voice` in `suggest` mode on all content, opens one draft PR per repo with violations found, posts a single summary.
+**Repos:** Every brand repo with a `ritual.config.json`.
+
+**MCP connectors:** None required.
+
+**What it does:** Clones each attached repo, runs `ritual-voice` in `suggest` mode on content, opens one draft PR per repo with fixes. Posts a single summary to the run output.
 
 ```
 ## Context Reset
@@ -44,104 +54,21 @@ After the summary is posted, stop. Do not continue into related work.
 Do not call other routines.
 ```
 
-**Attach:** Every brand repo you want audited.
-
-**First-run expectation:** On a mature content repo, expect 5–15 violations on the first sweep. Most will be P3/P4 (hype words, AI-slop) that accumulated. The signal-to-noise ratio improves after the first few passes as the config stabilizes.
+**First-run expectation:** On a mature content repo, expect 5–15 violations on the first sweep. Most will be P3/P4 accumulated hype words. Signal-to-noise improves after a few passes as the config stabilizes.
 
 ---
 
-## Archetype 2 — PR voice review (team repo)
+## Archetype 2 — Fact freshness digest ✓ Claude Code trigger
 
-**When the scan recommends this:** You review PRs that include content changes 5+ times a week, and your history shows comments on the same class of issue repeatedly (hype words, passive voice, stale numbers).
+**When the scan recommends this:** You have a mature `ritual.config.json` with 20+ `provenFacts` entries. Scan shows content files updated more often than the facts behind them.
 
-**Cadence:** Triggered, on `pull_request.opened` and `pull_request.synchronize`.
+**Cron:** `0 13 * * 1` (9:00 AM America/New_York Monday; UTC 13:00).
 
-**What it does:** Runs on every PR. Reads the diff. Leaves inline comments on violations. Adds a summary comment at the top of the PR with a violations-by-priority table. Never approves, never requests changes — comments only.
+**Repos:** The single repo containing the `ritual.config.json` you want audited.
 
-```
-## Context Reset
-Disregard prior conversation state. Your scope is defined entirely below.
+**MCP connectors:** None required for the base version. Add Gmail if you want the digest mailed; add Notion if you want it written to a page.
 
-## Task
-A pull request has just been opened. Load the diff and invoke the
-ritual-voice skill on every file changed in the PR that matches:
-- *.md, *.mdx
-- *.tsx, *.jsx (extract string literals only)
-- README changes
-
-Run in "flag" mode. For each violation, leave an inline review comment
-on the affected line with:
-- The priority (P1–P6)
-- The violation quoted
-- A suggested fix (if P3 or P4; higher priorities require human judgment)
-
-After all inline comments are posted, add a single summary comment at
-the top of the PR with a table of violations by priority.
-
-If the PR has zero violations, add a single comment: "Ritual: clean."
-
-## Rules
-- Do not approve or request changes. You are commenting only.
-- Do not comment on files outside the PR's diff.
-- Do not comment on files in ritual.config.json → exemptPaths.
-
-## Termination
-After the summary comment is posted, stop.
-```
-
-**Attach:** The single repo whose PRs you want reviewed.
-
-**First-run expectation:** Your next PR will get comments. Decide whether the comments are useful. If too noisy, tune `ritual.config.json → voice.bannedWords` and `bannedPhrases` to fit the brand's actual standards. The routine prompt should not change — the config does the work.
-
----
-
-## Archetype 3 — Pre-publish gate (CMS or CI integration)
-
-**When the scan recommends this:** You have a CMS or a content pipeline that pushes posts to production, and your history shows repeated "pulled and fixed after publishing" patterns (`git revert`, `git commit -m "typo"`, `git commit -m "fix stat"`).
-
-**Cadence:** API-triggered. Call it from your CMS publish button, your CI pipeline, or a manual webhook.
-
-**What it does:** Accepts a URL or content block. Returns structured JSON — `pass`, `warn`, or `block`. Designed for inline use in a publish pipeline.
-
-```
-## Context Reset
-Disregard prior conversation state. Your scope is defined entirely below.
-
-## Task
-The trigger payload contains a URL or a block of content to audit.
-Invoke the ritual-voice skill in "flag" mode on that content.
-
-If any P1 or P2 violations are found, respond with:
-{ "verdict": "block", "violations": [...], "reason": "..." }
-
-If only P3–P6 violations are found, respond with:
-{ "verdict": "warn", "violations": [...] }
-
-If clean, respond with:
-{ "verdict": "pass" }
-
-## Rules
-- The caller expects a structured JSON response.
-- Do not open PRs or edit files — this is a check, not a fix.
-- Respond within 60 seconds or the caller will treat it as a timeout.
-
-## Termination
-After returning the JSON response, stop.
-```
-
-**Attach:** Nothing — the content comes in with the trigger.
-
-**First-run expectation:** Calibrate thresholds. If the gate is too aggressive ("block" on every post), relax `metricsRequireVerification` to `false` until your `provenFacts` library is populated. A gate that always blocks becomes a gate that is always bypassed.
-
----
-
-## Archetype 4 — Fact freshness audit (config-aware scheduled run)
-
-**When the scan recommends this:** Your config has 20+ `provenFacts` entries and your scan shows content files being updated more often than the facts behind them. This is the "stale metric in a case study" failure mode, caught before it embarrasses you.
-
-**Cadence:** Scheduled, weekly on Monday 9:00 AM.
-
-**What it does:** Walks `ritual.config.json → provenFacts`. For each fact, checks `verifiedAt` against today. For facts older than `maxAgeDays`, sends a digest. Does not open PRs. Does not touch content. This is a reminder routine, not an edit routine.
+**What it does:** Walks `provenFacts`, marks any fact older than `staleness.maxAgeDays` as due for re-verification, and outputs a digest. Does not touch content. Does not modify the config. Reminder routine, not an edit routine.
 
 ```
 ## Context Reset
@@ -175,29 +102,226 @@ Emit a digest in this format:
 After the digest is emitted, stop.
 ```
 
-**Attach:** Every repo with a populated `ritual.config.json`.
-
-**First-run expectation:** This routine is an alarm clock. Its value is in pointing you at facts that need re-verification before someone else catches that the number is stale. Pair with a manual 15-minute weekly slot to re-verify flagged facts against their sources.
+**First-run expectation:** You'll immediately see which facts have aged past `maxAgeDays`. Pair the trigger with a 15-minute weekly slot to re-verify flagged facts against their sources and update the config.
 
 ---
 
-## How to pick between these four
+## Archetype 3 — Dependency + security digest ✓ Claude Code trigger
 
-Run the bootstrap. Read `~/ritual-patterns.json → top_5_recommendations[0]`. Match the shape:
+**When the scan recommends this:** You maintain 5+ repos with `package.json` / `requirements.txt` / `go.mod`. Scan shows dependency bumps happening manually and inconsistently. No GitHub Actions handling it yet.
 
-- **"skill+routine combo"** targeting content files with daily or near-daily edit frequency → Archetype 1
-- **"GitHub routine"** on a repo where PRs frequently touch content → Archetype 2
-- **"API routine"** triggered from a CMS or CI pipeline → Archetype 3
-- **Pattern mentions a growing `provenFacts` list and content refresh cadence** → Archetype 4
+**Cron:** `0 14 * * 1` (10:00 AM America/New_York Monday; UTC 14:00).
+
+**Repos:** Every active code repo you want tracked.
+
+**MCP connectors:** None required.
+
+**What it does:** Clones each attached repo, reads the lockfile and manifest, checks for outdated packages and known advisories. Opens one grouped draft PR per repo with safe patch-level bumps. Flags major-version bumps in the summary without applying.
+
+```
+## Context Reset
+Disregard prior conversation state. Your scope is defined entirely below.
+
+## Task
+For each attached repo:
+
+1. Detect the package manager (npm, pnpm, yarn, pip, poetry, go modules).
+2. Read the manifest and lockfile.
+3. Identify dependencies where the installed version is behind the latest
+   non-major release.
+4. Identify any dependencies flagged in the project's security advisories
+   (npm audit, pip-audit, govulncheck).
+5. For patch-level and safe minor bumps, apply them and open a single
+   draft PR titled "Dependency sweep [YYYY-MM-DD]" with the lockfile update.
+6. For major-version bumps, list them in the summary but do not apply.
+7. For security advisories, note them at the top of the PR body with
+   severity and remediation path.
+
+## Rules
+- One draft PR per repo. Never merge.
+- Never commit a major-version bump.
+- Skip repos with no lockfile (likely boilerplate or empty).
+- If the repo has Dependabot or Renovate already active, skip it and
+  note "handled by existing bot" in the summary.
+
+## Termination
+After the summary is posted, stop.
+```
+
+**First-run expectation:** Use this only on repos NOT already covered by Dependabot/Renovate. Running two dependency updaters on the same repo creates noise.
+
+---
+
+## Archetype 4 — Content calendar sync ✓ Claude Code trigger
+
+**When the scan recommends this:** You track a content calendar in Notion, Google Sheets, or a markdown file. Scan shows a repeated Sunday/Monday pattern of "check what's shipping this week" manual reviews.
+
+**Cron:** `0 23 * * 0` (7:00 PM America/New_York Sunday; UTC 23:00).
+
+**Repos:** The repo containing the content calendar (if a markdown file) OR none (if the calendar lives in Notion/Drive).
+
+**MCP connectors:** **Notion** if the calendar is a Notion page. **Google Drive** if it's a sheet. Both are already on your connected-connectors list.
+
+**What it does:** Pulls the next 7 days of scheduled content from the calendar source. Checks each scheduled item for (a) a draft existing in the attached repo, (b) required assets linked, (c) any blockers flagged. Emits a "week ahead" digest.
+
+```
+## Context Reset
+Disregard prior conversation state. Your scope is defined entirely below.
+
+## Task
+Pull scheduled content items for the next 7 days from the Notion
+database at [NOTION_DATABASE_URL] (or the attached Drive sheet at
+[SHEET_URL] — one or the other, not both).
+
+For each scheduled item:
+1. Check if a draft exists in the attached repo under /content or
+   /drafts. Match by the item's slug or title.
+2. Check if required assets (hero image, video, OG image) are linked
+   in the item's properties.
+3. Flag any item tagged "blocked" or with empty required fields.
+
+Output a digest:
+
+## Week ahead — [this week's dates]
+
+### Ready to ship ([N])
+- [date] · [title] · draft: ✓ · assets: ✓
+
+### Needs drafts ([N])
+- [date] · [title] · missing draft
+
+### Needs assets ([N])
+- [date] · [title] · missing [asset type]
+
+### Blocked ([N])
+- [date] · [title] · reason from calendar
+
+## Rules
+- Do not edit the calendar.
+- Do not create drafts.
+- The digest is the entire output.
+
+## Termination
+After the digest is emitted, stop.
+```
+
+**First-run expectation:** The first digest tells you what's about to ship late. Act on the blockers manually; the trigger is a weekly alarm clock, not a doer.
+
+---
+
+## Archetype 5 — Inbox triage (Gmail-backed) ✓ Claude Code trigger
+
+**When the scan recommends this:** Your shell history shows frequent pivots between email and code (dozens of `open mail.app` or browser tabs). Claude Code memory indicates "check emails" as a recurring task. You use Gmail.
+
+**Cron:** `0 11 * * 1-5` (7:00 AM America/New_York weekdays; UTC 11:00).
+
+**Repos:** None required.
+
+**MCP connectors:** **Gmail** (connected on your account).
+
+**What it does:** Reads unread inbox threads from the last 24 hours. Summarizes each thread. Classifies into action-required / informational / discardable. Emits a digest.
+
+```
+## Context Reset
+Disregard prior conversation state. Your scope is defined entirely below.
+
+## Task
+Using the Gmail MCP connector, list unread threads in the inbox from
+the last 24 hours (label: UNREAD, in:inbox, newer_than:1d).
+
+For each thread:
+1. Read the latest message.
+2. Classify:
+   - "action-required" — a human is waiting on me
+   - "informational" — FYI, no action
+   - "discardable" — marketing, automated, ignorable
+3. Summarize the thread in one sentence.
+
+Emit a digest grouped by classification, newest first:
+
+## Inbox triage — [YYYY-MM-DD]
+
+### Action required ([N])
+- [From] · [subject] · [1-sentence summary]
+- ...
+
+### Informational ([N])
+- [From] · [subject] · [1-sentence summary]
+
+### Discardable ([N])
+- (just a count)
+
+## Rules
+- Do not reply, archive, label, or mark anything as read.
+- Do not open attachments.
+- The digest is the entire output.
+
+## Termination
+After the digest is emitted, stop.
+```
+
+**First-run expectation:** Expect noise on day one. Tune the prompt after a week — "treat these senders as automated," "always elevate threads from these domains," etc.
+
+---
+
+## Archetype 6 — Deploy verification (GitHub Actions, NOT a Claude Code trigger)
+
+**Why not a Claude Code trigger:** Event-driven (fires on push to main). Claude Code triggers are cron-based. This pattern belongs in `.github/workflows/`.
+
+Skeleton workflow:
+
+```yaml
+# .github/workflows/deploy-guard.yml
+name: Deploy Guard
+on:
+  push:
+    branches: [main]
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ritual-voice pre-deploy
+        run: |
+          # Clone Ritual, run ritual-voice against content, fail CI if verdict is republish
+          ...
+```
+
+Full example lives in [`docs/routines.md`](routines.md). If the scan recommends this, the bootstrap's Phase 4 output will tell you to set it up in GitHub Actions, not in Claude Code's trigger UI.
+
+---
+
+## Archetype 7 — Local filesystem digest (launchd, NOT a Claude Code trigger)
+
+**Why not a Claude Code trigger:** Needs to read local filesystem (`~/brands/*/renders/`, local tool output, local notification script). Claude Code triggers run remotely with no local access.
+
+If the scan recommends this pattern, the bootstrap will point you at:
+
+- `launchctl` + a `.plist` in `~/Library/LaunchAgents/`
+- A Python or shell script that does the filesystem walk
+- Optional iMessage via AppleScript for notifications
+
+The bootstrap will not draft the plist or script. It will tell you that the pattern belongs in local automation and link to Apple's launchd docs. This is honest scoping — forcing a Claude Code trigger for this pattern does not work.
+
+---
+
+## How to pick between these
+
+Read `~/ritual-patterns.json → top_5_recommendations[0]`. Match the shape:
+
+- Operates on git-hosted content, runs on cadence → Archetype 1, 2, or 3
+- Needs external service (Notion, Gmail, Drive) → Archetype 4 or 5
+- Fires on repo events (PR open, push) → Archetype 6 (GitHub Actions)
+- Needs local machine access → Archetype 7 (launchd)
 
 If your top recommendation doesn't match any of these shapes, open an issue with the pattern JSON — that's signal that a new archetype should exist.
 
-## What not to routine-ify
+## What not to routine-ify (all contexts)
 
-**Don't wrap fix mode in a routine.** The skill's fix mode is for interactive use where a human clicks "apply." A scheduled routine that auto-fixes content is a supply-chain vector into your published copy.
+**Don't wrap fix mode in a scheduled routine.** Fix mode applies rewrites directly. A scheduled trigger that auto-fixes content is a supply-chain vector into your published copy. Archetype prompts here default to `suggest` mode for that reason.
 
-**Don't stack multiple Ritual routines on the same repo.** One routine per repo maximum. If you need different cadences for different file types, that's different file globs in the same routine — not different routines.
+**Don't stack multiple Ritual triggers on the same repo.** One trigger per repo maximum. Different cadences for different file types? Use different globs in the same prompt, not different triggers.
 
-**Don't routine-ify exploration.** The bootstrap scan is a one-shot. Don't schedule it to re-scan your machine weekly — your patterns don't change that fast, and the scan surfaces your work habits which don't need repeated exposure to the model.
+**Don't routine-ify the bootstrap scan.** The scan is a one-shot. Your work patterns don't change fast enough to justify a weekly re-scan, and scheduling the scan burns routine slots on low-change signal.
 
-**Don't routine-ify anything touching `exemptPaths`.** If the config tells the skill not to read a path, the routine should never even try. This is enforced by the skill, but double-check your routine prompts don't override it.
+**Don't routine-ify anything touching `exemptPaths`.** If the config tells the skill not to read a path, the routine should never even try. This is enforced by the skill, but double-check your prompts don't override it.
