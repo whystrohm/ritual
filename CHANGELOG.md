@@ -30,3 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README restructured: routine-builder wedge as the lead, voice-audit as the first example of what the bootstrap recommends
 - Removed `"solutions": "tools"` substitution from preferredLanguage defaults — too many legitimate uses of "solutions" for a whole-word swap
 - Example WhyStrohm config's `provenFacts` now contains only facts verifiable against the live whystrohm.com site (pricing, client count, offer)
+- Bootstrap scan hardened for modern macOS: reads `~/.zsh_sessions/*.history` (per-session history where most command data actually lives on default macOS zsh configs). Without this fix, users with `HISTSIZE=0` see ~40x undercounted frequencies.
+- Bootstrap scan adds a Phase 0 prior-context pass: reads `~/CLAUDE.md`, `~/.claude/memory/`, and repo-level CLAUDE.md files before analyzing history, so recommendations weight stated intent alongside observed behavior.
+- Bootstrap scan detects existing automations (launchd, cron, GitHub Actions) and excludes them from recommendation candidates, so the scan does not propose work that is already running.
+- Bootstrap output JSON adds `prior_context` and `existing_automations` fields; `scope` now tracks `history_lines_analyzed` and `history_sources[]` for provenance.
+- Bootstrap README adds a "what good results require" section setting honest expectations about machines with no memory, <90 days of history, or single-repo setups.

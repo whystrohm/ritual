@@ -1,13 +1,25 @@
 # Bootstrap — run this in Claude Code on your Mac
 
-Paste the prompt below into a Claude Code session **at your home directory** (`cd ~` first). It does four things in sequence:
+Paste the prompt below into a Claude Code session **at your home directory** (`cd ~` first). It does five things in sequence:
 
-1. Scans your Mac for repeated work patterns
-2. Writes the results to `~/ritual-patterns.json`
-3. Installs the Ritual skill
-4. Generates a personalized first-routine recommendation based on what it found
+1. Reads your prior Claude Code context (CLAUDE.md, memory files) to understand your stated intent
+2. Scans your Mac for repeated work patterns (including per-session history on macOS)
+3. Writes the results to `~/ritual-patterns.json`
+4. Installs the Ritual skill
+5. Generates a personalized first-routine recommendation based on what it found
 
 Run time: about 5–10 minutes depending on your repo count.
+
+## What good results require
+
+The scan's recommendations are only as sharp as the signals it can read. Set expectations before you run:
+
+- **Curated memory or CLAUDE.md files** are the single biggest accelerant. If you have a `~/CLAUDE.md` or `~/.claude/memory/MEMORY.md` that states your active projects, clients, and rules, the scan will weight recommendations by stated intent. A machine without this gets behavior-only recommendations — correct, but more generic.
+- **At least 90 days of shell history.** On modern macOS, most of your history lives in `~/.zsh_sessions/` as per-session files, not in `~/.zsh_history`. The scan reads both. A machine newer than 30 days will produce noisy frequency counts — run the scan again at 90 days and compare.
+- **3+ active git repos.** Shared-schema and cross-repo patterns require at least 3 repos under `~/` to find meaningful overlap. A single-repo machine gets a degraded cross-repo section but keeps everything else.
+- **Existing automations are detected, not duplicated.** The scan reads `~/Library/LaunchAgents/`, your crontab, and `.github/workflows/` in every found repo. Jobs that already run get listed in `existing_automations[]` and are explicitly excluded from recommendation candidates.
+
+If any of the above is missing, the scan will still run and write its output. The recommendations section will note what was weak and why.
 
 ---
 
@@ -25,11 +37,45 @@ my work patterns.
 Work through this in four phases. Announce each phase when you start it so I
 can follow along.
 
+## Phase 0 — Prior context
+
+Before reading any history, check for explicit intent signals:
+
+- ~/CLAUDE.md, ~/AGENTS.md, ~/GEMINI.md (home-level project instructions)
+- ~/.claude/memory/ and ~/.claude/projects/*/memory/ (if they exist) — these
+  are curated project memories that state intent, active work, and rules
+- ~/.claude/CLAUDE.md (user-scope Claude Code instructions)
+- Top-level CLAUDE.md inside any repo you'll scan in Phase 1
+
+Read these first. Summarize what they tell you about the operator's
+current projects, stated rules, and active automations. This becomes
+the lens through which Phase 1 patterns are interpreted.
+
+If no such files exist, note that and proceed — Phase 1 will work, but
+recommendations will be more generic. A machine with curated memory
+produces sharper recommendations than a machine with only shell
+history, because memory states intent while history only shows
+behavior.
+
 ## Phase 1 — Pattern scan
 
 Scan my home directory for patterns of repeated work. Sources:
 
-- Shell history: ~/.zsh_history, ~/.bash_history (last 180 days)
+- Shell history (combine all sources into one stream before analysis):
+  - ~/.zsh_history
+  - ~/.bash_history (if present)
+  - ~/.zsh_sessions/*.history — **critical for modern macOS.** Default zsh
+    on macOS writes per-session history here, often with the main
+    ~/.zsh_history kept small (HISTSIZE=0 or similar). On many machines,
+    99% of the history lives in ~/.zsh_sessions. Read all .history
+    files in that directory and fold them into your frequency counts.
+  - Limit combined analysis to the last 180 days by filename mtime when
+    aggregating sessions; for ~/.zsh_history itself, include all lines.
+- Existing automations (so you do not propose duplicates):
+  - ~/Library/LaunchAgents/*.plist — check for launchd jobs
+  - crontab -l (via shell) — check for cron jobs
+  - .github/workflows/*.yml in every git repo found in Phase 1 — GitHub
+    Actions that already run
 - Git repos under ~/ (any directory with a .git folder, scanned recursively
   but not past 4 levels deep to stay fast)
 - Recent VS Code workspaces and project folders
@@ -59,7 +105,25 @@ Write results to ~/ritual-patterns.json with this shape:
 
 {
   "scanned_at": "<ISO timestamp>",
-  "scope": { "repos_scanned": N, "files_sampled": N, "history_days": 180 },
+  "scope": {
+    "repos_scanned": N,
+    "files_sampled": N,
+    "history_days": 180,
+    "history_lines_analyzed": N,
+    "history_sources": ["~/.zsh_history", "~/.zsh_sessions/*.history", "..."]
+  },
+  "prior_context": {
+    "files_found": ["~/CLAUDE.md", "~/.claude/memory/MEMORY.md", "..."],
+    "summary": "1–3 sentence distillation of what the memory/instructions say about this operator's intent and active projects"
+  },
+  "existing_automations": [
+    {
+      "type": "launchd|cron|github-action",
+      "identifier": "com.example.job",
+      "schedule": "...",
+      "what_it_does": "..."
+    }
+  ],
   "patterns": [
     {
       "id": "pattern-001",
