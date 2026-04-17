@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  release:
+    types: [published]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate skill structure
+        run: |
+          test -f skill/SKILL.md
+          test -f skill/references/config-schema.md
+          test -f skill/references/checks.md
+
+      - name: Check SKILL.md line count
+        run: |
+          lines=$(wc -l < skill/SKILL.md)
+          if [ "$lines" -gt 500 ]; then
+            echo "SKILL.md is $lines lines, over the 500-line guideline"
+            exit 1
+          fi
+          echo "SKILL.md is $lines lines (target <500)"
+
+      - name: Validate example configs are valid JSON
+        run: |
+          for config in examples/*/ritual.config.json; do
+            echo "Validating $config"
+            python3 -c "import json; json.load(open('$config'))"
+          done
+
+      - name: Validate example configs have required fields
+        run: |
+          for config in examples/*/ritual.config.json; do
+            python3 scripts/validate_config.py "$config"
+          done
+
+  package:
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.event_name == 'release'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build .skill artifact
+        run: ./scripts/package.sh
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/ritual-voice.skill

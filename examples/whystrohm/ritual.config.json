@@ -1,0 +1,110 @@
+{
+  "brand": {
+    "name": "WhyStrohm",
+    "tagline": "Managed content infrastructure for founder-led brands.",
+    "tone": "direct, specific, no fluff. short sentences. numbers over adjectives."
+  },
+  "canonicalNames": {
+    "Tye": "Tyshaun Perryman",
+    "Tyshaun": "Tyshaun Perryman",
+    "Perryman": "Tyshaun Perryman",
+    "Yurr": "Yuri Strohm",
+    "Yuri": "Yuri Strohm",
+    "Strohm": "Yuri Strohm",
+    "IRS": "Insightful Recovery Solutions",
+    "ISAI": "Innovation Synergy AI",
+    "WAA": "Winnin Against Addiction",
+    "NVUS": "NVUS Hearts"
+  },
+  "voice": {
+    "bannedWords": [
+      "comprehensive",
+      "seamless",
+      "revolutionary",
+      "game-changing",
+      "cutting-edge",
+      "leverage",
+      "robust",
+      "synergy",
+      "holistic",
+      "best-in-class",
+      "world-class",
+      "next-generation",
+      "innovative",
+      "transformative",
+      "empower",
+      "unlock",
+      "streamline",
+      "optimize",
+      "elevate",
+      "unleash",
+      "pioneering",
+      "groundbreaking",
+      "disruptive"
+    ],
+    "bannedPhrases": [
+      "it's not just",
+      "this isn't just",
+      "not only",
+      "delve",
+      "tapestry",
+      "testament to",
+      "navigate the landscape",
+      "in today's fast-paced world",
+      "at the end of the day",
+      "move the needle",
+      "deep dive",
+      "low-hanging fruit"
+    ],
+    "preferredLanguage": {
+      "utilize": "use",
+      "implement": "build",
+      "stakeholders": "people",
+      "going forward": "next",
+      "in order to": "to",
+      "a variety of": "several",
+      "prior to": "before"
+    },
+    "examples": [
+      "30 minutes a week. One operator. No agency.",
+      "Voice extraction, guardrails encoded in the repo, automated publishing. That's the whole system.",
+      "Eleven brands built and running."
+    ]
+  },
+  "provenFacts": [
+    {
+      "claim": "Managed content infrastructure starting at $3,000/month",
+      "verifiedAt": "2026-04-17",
+      "source": "whystrohm.com — published pricing on homepage and multiple blog posts",
+      "brand": "WhyStrohm"
+    },
+    {
+      "claim": "Eleven founder-led brands built and running",
+      "verifiedAt": "2026-04-17",
+      "source": "whystrohm.com — homepage proof section; four named clients visible in logo strip (Insightful Recovery Solutions, Innovation Synergy AI, NVUS Hearts, Winnin' Against Addiction)",
+      "brand": "WhyStrohm"
+    },
+    {
+      "claim": "30 minutes per week of founder time",
+      "verifiedAt": "2026-04-17",
+      "source": "whystrohm.com — offer description in homepage hero and CTA sections",
+      "brand": "WhyStrohm"
+    }
+  ],
+  "staleness": {
+    "maxAgeDays": 30,
+    "metricsRequireVerification": true
+  },
+  "exemptPaths": [
+    "node_modules/",
+    ".next/",
+    "dist/",
+    "build/",
+    "public/",
+    ".git/",
+    "bbn/",
+    "rtx/",
+    "defense/",
+    "darpa/"
+  ]
+}

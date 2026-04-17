@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "name": "Acme Test",
+    "tone": "direct, specific, no fluff"
+  },
+  "canonicalNames": {
+    "Ty": "Tyler Robinson",
+    "Tyler": "Tyler Robinson",
+    "Robinson": "Tyler Robinson"
+  },
+  "voice": {
+    "bannedWords": [
+      "comprehensive",
+      "seamless",
+      "revolutionary",
+      "game-changing",
+      "leverage",
+      "innovative",
+      "empower",
+      "unlock",
+      "cutting-edge"
+    ],
+    "bannedPhrases": [
+      "delve",
+      "tapestry",
+      "testament to",
+      "in today's fast-paced world",
+      "at the end of the day"
+    ],
+    "examples": [
+      "We ship 400 videos a quarter from a single config file.",
+      "30 minutes a week. One operator. No agency."
+    ]
+  },
+  "provenFacts": [
+    {
+      "claim": "400 videos shipped in Q1 2026",
+      "verifiedAt": "2026-04-01",
+      "source": "Acme render logs"
+    },
+    {
+      "claim": "11 active clients",
+      "verifiedAt": "2026-04-15",
+      "source": "Acme CRM"
+    }
+  ],
+  "staleness": {
+    "maxAgeDays": 30,
+    "metricsRequireVerification": true
+  },
+  "exemptPaths": [
+    "node_modules/",
+    ".git/"
+  ]
+}

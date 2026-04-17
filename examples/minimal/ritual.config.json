@@ -1,0 +1,57 @@
+{
+  "brand": {
+    "name": "Your Brand",
+    "tagline": "One sentence about what you do.",
+    "tone": "direct, specific, no fluff"
+  },
+  "canonicalNames": {},
+  "voice": {
+    "bannedWords": [
+      "comprehensive",
+      "seamless",
+      "revolutionary",
+      "game-changing",
+      "cutting-edge",
+      "leverage",
+      "robust",
+      "synergy",
+      "innovative",
+      "transformative"
+    ],
+    "bannedPhrases": [
+      "it's not just",
+      "this isn't just",
+      "delve",
+      "tapestry",
+      "in today's fast-paced world"
+    ],
+    "preferredLanguage": {
+      "utilize": "use",
+      "implement": "build",
+      "solutions": "tools"
+    },
+    "examples": [
+      "Replace these with 2-3 real sentences in your brand voice.",
+      "Short, specific, grounded in numbers or named subjects.",
+      "The skill uses these as a style reference when rewriting."
+    ]
+  },
+  "provenFacts": [
+    {
+      "claim": "Example: shipped 400 units in Q1",
+      "verifiedAt": "2026-04-01",
+      "source": "Internal sales report"
+    }
+  ],
+  "staleness": {
+    "maxAgeDays": 30,
+    "metricsRequireVerification": false
+  },
+  "exemptPaths": [
+    "node_modules/",
+    ".next/",
+    "dist/",
+    "build/",
+    ".git/"
+  ]
+}
