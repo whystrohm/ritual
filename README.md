@@ -129,8 +129,6 @@ The point is that the recommendations are concrete, cite real frequencies, and n
 
 ## Before / after: `ritual-voice` on real content
 
-![Lint demo: ten violations caught, rewrite pulled from provenFacts, every verified number marked](assets/lint-demo.gif)
-
 Representative run on a paragraph of founder-written copy:
 
 **Before:**

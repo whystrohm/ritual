@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `examples/whystrohm/` now holds only WhyStrohm's own names and one dated fact.
 - Em dashes replaced with plain punctuation across the docs.
 
+### Removed
+- `assets/lint-demo.gif` and `assets/lint-demo.mp4`, and their README embed. They showed old copy.
+
 ## [0.1.0] - 2026-04-17
 
 ### Added
