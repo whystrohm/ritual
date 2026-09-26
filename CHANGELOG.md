@@ -10,12 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2026-09-26
 
 ### Changed
-- The reference docs (`skill/references/`, `docs/limitations.md`) use a fictional brand, Northwind Studio, and a fictional founder, Dana Okafor, in every example. The packaged `ritual-voice.skill` no longer contains real client names.
+- The reference docs (`skill/references/`, `docs/limitations.md`) use a fictional brand, Northwind Studio, and a fictional founder, Dana Okafor, in every example, and the packaged `ritual-voice.skill` ships the same references.
 - `examples/whystrohm/` holds only WhyStrohm's own names and one dated fact.
 - The docs use plain punctuation in place of em dashes.
 
 ### Removed
-- `assets/lint-demo.gif` and `assets/lint-demo.mp4`, and their README embed. They showed old copy.
+- `assets/lint-demo.gif` and `assets/lint-demo.mp4`, and their README embed.
 
 ## [0.1.0] - 2026-04-17
 
