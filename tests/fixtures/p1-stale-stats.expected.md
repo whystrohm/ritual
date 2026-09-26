@@ -1,4 +1,4 @@
-# Expected Output — p1-stale-stats.md
+# Expected Output: p1-stale-stats.md
 
 ## Summary
 - Total violations: 5 (all P1)
@@ -7,7 +7,7 @@
 
 ## Violations
 
-P1 — Stale stats
+P1: Stale stats
   L1 "250 videos in Q1 2026"
     Why: contradicts provenFacts entry "400 videos shipped in Q1 2026"
     Verdict: outdated

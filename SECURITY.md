@@ -8,7 +8,7 @@ Expect a response within 3 business days.
 
 ## Scope
 
-This project is a Claude Code skill — a set of instructions Claude follows. It has no executable code, no network calls of its own, and no data storage outside the user's repository.
+This project is a Claude Code skill: a set of instructions Claude follows. It has no executable code, no network calls of its own, and no data storage outside the user's repository.
 
 Security concerns that are in scope:
 
@@ -26,7 +26,7 @@ Concerns that are out of scope (report to Anthropic):
 
 The skill ships with exempt-path defaults that cover common sensitive directories: `node_modules/`, `.next/`, `dist/`, `build/`, `.git/`, and any path containing `defense`, `darpa`, `bbn`, `rtx`, `classified`, `itar`, `ear`.
 
-If you operate in a regulated environment, extend `exemptPaths` in your config. The skill treats these as prefixes and skips matching paths entirely — it does not send their contents to the model.
+If you operate in a regulated environment, extend `exemptPaths` in your config. The skill treats these as prefixes and skips matching paths entirely: it does not send their contents to the model.
 
 ## Supply chain
 

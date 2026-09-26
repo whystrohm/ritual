@@ -1,6 +1,6 @@
 # Writing That Avoids Slop
 
-This piece is *about* the words a careful writer should avoid. It uses quotation marks, enumeration cues, and explicit definition contexts — none of which should trigger P3 or P4 violations under the mention-vs-use exemption.
+This piece is *about* the words a careful writer should avoid. It uses quotation marks, enumeration cues, and explicit definition contexts: none of which should trigger P3 or P4 violations under the mention-vs-use exemption.
 
 ## Hype words we avoid
 
@@ -21,7 +21,7 @@ Words like `leverage` and `empower` get flagged by our linter. The phrase "it's 
 
 > Our comprehensive, seamless platform empowers teams to unlock their full potential.
 
-The block quote above is an example of what our linter catches. The words inside the quote are not endorsed voice — they are a deliberate sample of what to avoid.
+The block quote above is an example of what our linter catches. The words inside the quote are not endorsed voice: they are a deliberate sample of what to avoid.
 
 ## Code snippet showing the config
 

@@ -4,7 +4,7 @@ Ritual drafts routines. This doc explains how to take that draft and turn it int
 
 ## What a routine actually is
 
-A Claude Code routine — called a "scheduled trigger" in the product — is a **remote Claude Code agent** that runs in Anthropic's cloud on a cron schedule. It is not a local cron job. It is not a background process on your Mac. It is a full Claude Code session that spawns in the cloud, does the work, and shuts down.
+A Claude Code routine, called a "scheduled trigger" in the product, is a **remote Claude Code agent** that runs in Anthropic's cloud on a cron schedule. It is not a local cron job. It is not a background process on your Mac. It is a full Claude Code session that spawns in the cloud, does the work, and shuts down.
 
 What this means in practice:
 
@@ -15,7 +15,7 @@ What this means in practice:
 
 ## The three execution contexts
 
-Not every automation Ritual recommends belongs in a Claude Code trigger. Some belong in GitHub Actions. Some belong in local cron or launchd. The bootstrap scan labels each recommendation so you know which context fits:
+Not every job Ritual recommends belongs in a Claude Code trigger. Some belong in GitHub Actions. Some belong in local cron or launchd. The bootstrap scan labels each recommendation so you know which context fits:
 
 | Context | When it's right | How to build it |
 |---|---|---|
@@ -25,26 +25,26 @@ Not every automation Ritual recommends belongs in a Claude Code trigger. Some be
 
 Ritual focuses on Claude Code triggers because they're the new Claude Code feature and the highest-leverage option for most operators. But when the scan recommends something that belongs in one of the other two contexts, it says so.
 
-## The exact 4-click path — create a Claude Code trigger
+## The exact 4-click path: create a Claude Code trigger
 
 You have a drafted routine prompt from Phase 4. Here's how it becomes a running trigger.
 
-**Step 1 — Open a new Claude Code session.** Anywhere. The trigger does not need to be created from a specific directory.
+**Step 1: Open a new Claude Code session.** Anywhere. The trigger does not need to be created from a specific directory.
 
-**Step 2 — Type `/schedule`.** Claude Code will load the schedule skill and walk you through it interactively. If you prefer the web UI, go to [claude.ai/code/scheduled](https://claude.ai/code/scheduled) and click "New trigger."
+**Step 2: Type `/schedule`.** Claude Code will load the schedule skill and walk you through it interactively. If you prefer the web UI, go to [claude.ai/code/scheduled](https://claude.ai/code/scheduled) and click "New trigger."
 
-**Step 3 — Paste the drafted prompt from Phase 4 into the `prompt` field.** The prompt is the entire agent instruction set. It must be self-contained — the remote agent starts with zero context, so do not edit the prompt down to a one-liner. Paste it whole.
+**Step 3: Paste the drafted prompt from Phase 4 into the `prompt` field.** The prompt is the entire agent instruction set. It must be self-contained: the remote agent starts with zero context, so do not edit the prompt down to a one-liner. Paste it whole.
 
-**Step 4 — Fill in the rest:**
+**Step 4: Fill in the rest:**
 
-- **Name** — Descriptive. "Weekly voice sweep across all brand repos" is better than "ritual-1."
-- **Cron expression** — Times are in UTC. Your local time converts. Example: 6:00 AM America/New_York on Monday = `0 10 * * 1` (10am UTC). Claude Code will help with this conversion.
-- **Repos** — Attach the GitHub repos the agent should clone. One or more. The agent runs once per trigger; it can act on all attached repos in sequence inside that single run.
-- **MCP connectors** — Attach any connectors the routine needs (Gmail, Notion, Google Drive, etc.). These come from your [connected claude.ai connectors](https://claude.ai/settings/connectors).
-- **Model** — Default: `claude-sonnet-4-6`. Switch to opus for harder routines (codebase-wide refactors, complex analysis). Haiku is cheaper for trivial routines.
-- **Enabled** — Leave enabled. You will test manually first.
+- **Name**: Descriptive. "Weekly voice sweep across all brand repos" is better than "ritual-1."
+- **Cron expression**: Times are in UTC. Your local time converts. Example: 6:00 AM America/New_York on Monday = `0 10 * * 1` (10am UTC). Claude Code will help with this conversion.
+- **Repos**: Attach the GitHub repos the agent should clone. One or more. The agent runs once per trigger; it can act on all attached repos in sequence inside that single run.
+- **MCP connectors**: Attach any connectors the routine needs (Gmail, Notion, Google Drive, etc.). These come from your [connected claude.ai connectors](https://claude.ai/settings/connectors).
+- **Model**: Default: `claude-sonnet-4-6`. Switch to opus for harder routines (codebase-wide refactors, complex analysis). Haiku is cheaper for trivial routines.
+- **Enabled**: Leave enabled. You will test manually first.
 
-## Test before trusting — always
+## Test before trusting: always
 
 **Don't let a new trigger run on schedule before you've fired it once manually.**
 
@@ -57,15 +57,15 @@ Before setting the cron live:
 5. If yes, the schedule is trusted. Walk away.
 6. If no, update the prompt. Re-run manually. Repeat until it's clean.
 
-This is the most common mistake people make with triggers — they create one, wait a week, wake up to fifty bad PRs across their repos. Fire once manually, review, then schedule.
+This is the most common mistake people make with triggers: they create one, wait a week, wake up to fifty bad PRs across their repos. Fire once manually, review, then schedule.
 
 ## What you'll see when it runs
 
 When a scheduled trigger fires on its cron, you see the results in three places:
 
-- **Your repo** — Draft PRs (if the routine opens PRs), new commits (if the routine commits directly), inline PR comments (if the routine reviews an existing PR)
-- **The scheduled triggers page** — Run history, logs, status (success/failed), output snapshots
-- **Claude.ai notifications** — Depending on your settings, a push notification or email when a run completes or fails
+- **Your repo**: Draft PRs (if the routine opens PRs), new commits (if the routine commits directly), inline PR comments (if the routine reviews an existing PR)
+- **The scheduled triggers page**: Run history, logs, status (success/failed), output snapshots
+- **Claude.ai notifications**: Depending on your settings, a push notification or email when a run completes or fails
 
 For `ritual-voice` specifically, the default routine pattern opens one draft PR per brand repo with voice fixes applied. No auto-merge, no force-push. You merge the PRs manually after review.
 
@@ -102,10 +102,10 @@ The API does not support delete. Go to [claude.ai/code/scheduled](https://claude
 
 Triggers are the right tool for git-hosted, cloud-friendly work on a cadence. They are the wrong tool for:
 
-- **Local filesystem operations** — use launchd / cron
-- **Event-driven repo automation** (on PR open, on push) — use GitHub Actions
-- **Real-time webhooks** — build a small server, not a trigger
-- **Work that needs files outside any git repo** — commit them first, or move to local automation
+- **Local filesystem operations**: use launchd / cron
+- **Event-driven repo jobs** (on PR open, on push): use GitHub Actions
+- **Real-time webhooks**: build a small server, not a trigger
+- **Work that needs files outside any git repo**: commit them first, or move to a local scheduled job
 
 Ritual's first-routine recommendations call out when something belongs in a different context so you're not forcing a fit.
 
@@ -116,4 +116,4 @@ Ritual's first-routine recommendations call out when something belongs in a diff
 3. Run the bootstrap scan again and compare `~/ritual-patterns.json` against the first run. What's still repetitive? That's your second routine candidate.
 4. Ship that one. Repeat.
 
-One trigger per week beats five triggers in a day. Automation is load-bearing — every routine needs a human to maintain it, so the floor on routine count is higher than it looks.
+One trigger per week beats five triggers in a day. Every routine needs a human to maintain it, so the floor on routine count is higher than it looks.

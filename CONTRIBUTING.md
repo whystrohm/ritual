@@ -1,6 +1,6 @@
 # Contributing to Ritual
 
-Thanks for considering a contribution. This project is small by design — the leverage is in people's `ritual.config.json` files, not in the skill itself.
+Thanks for considering a contribution. This project is small by design: the leverage is in people's `ritual.config.json` files, not in the skill itself.
 
 ## What we want
 
@@ -19,9 +19,9 @@ Thanks for considering a contribution. This project is small by design — the l
 The single most valuable contribution for most people. Shape:
 
 1. Create a new folder under `examples/` named for your niche or brand: `examples/saas-growth/`, `examples/dtc-skincare/`, `examples/recovery-nonprofit/`.
-2. Add a `ritual.config.json` with your brand's canonical names, banned words, voice examples, and — if you can — 2–3 verified facts with sources. If the facts are private, leave `provenFacts` empty and flip `metricsRequireVerification` to `false`.
+2. Add a `ritual.config.json` with your brand's canonical names, banned words, voice examples, and, if you can, 2–3 verified facts with sources. If the facts are private, leave `provenFacts` empty and flip `metricsRequireVerification` to `false`.
 3. Add a short `README.md` explaining what niche the config is for, what is distinctive about the banned words / voice examples, and what is intentionally left out.
-4. Open a PR. We will ask about anything unclear but we will not block on polish — a rough example config is more valuable than a perfect one that does not exist.
+4. Open a PR. We will ask about anything unclear but we will not block on polish: a rough example config is more valuable than a perfect one that does not exist.
 
 The example folder tree:
 
@@ -31,7 +31,7 @@ examples/your-niche/
 └── README.md
 ```
 
-That is it. No build step, no tests required beyond `scripts/validate_config.py examples/your-niche/ritual.config.json` passing (which CI runs automatically).
+That is it. No build step, no tests required beyond `scripts/validate_config.py examples/your-niche/ritual.config.json` passing (CI runs it on every PR).
 
 ## What we'd probably reject
 

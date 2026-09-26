@@ -1,4 +1,4 @@
-# Expected Output — p3-ai-slop.md
+# Expected Output: p3-ai-slop.md
 
 ## Summary
 - Total violations: 8+
@@ -7,7 +7,7 @@
 
 ## Violations (P3 primary)
 
-P3 — AI-slop markers
+P3: AI-slop markers
   L1 "In today's fast-paced world"          exact bannedPhrases match
   L1 "testament to"                          bannedPhrases match
   L1 "delve"                                 bannedPhrases match

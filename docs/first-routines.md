@@ -1,18 +1,18 @@
 # First-Routine Archetypes
 
-When the [bootstrap scan](bootstrap.md) finishes, it ranks automation candidates and classifies each by **execution context**:
+When the [bootstrap scan](bootstrap.md) finishes, it ranks routine candidates and classifies each by **execution context**:
 
-- **Claude Code trigger** — remote agent, runs in Anthropic's cloud on a cron schedule, operates on git-hosted repos, can use MCP connectors. Created at [claude.ai/code/scheduled](https://claude.ai/code/scheduled). This doc covers these.
-- **GitHub Actions** — event-driven inside a specific repo. Lives in `.github/workflows/`. See [`docs/routines.md`](routines.md) for a ritual-voice example.
-- **Local cron / launchd** — needs local files, scripts, or tools. Lives on your Mac in `~/Library/LaunchAgents/` or `crontab`. Out of scope for Ritual's drafting — the scan will flag the pattern and point you at the right tool.
+- **Claude Code trigger**: remote agent, runs in Anthropic's cloud on a cron schedule, operates on git-hosted repos, can use MCP connectors. Created at [claude.ai/code/scheduled](https://claude.ai/code/scheduled). This doc covers these.
+- **GitHub Actions**: event-driven inside a specific repo. Lives in `.github/workflows/`. See [`docs/routines.md`](routines.md) for a ritual-voice example.
+- **Local cron / launchd**: needs local files, scripts, or tools. Lives on your Mac in `~/Library/LaunchAgents/` or `crontab`. Out of scope for Ritual's drafting: the scan will flag the pattern and point you at the right tool.
 
 Before building any of these, read [`how-routines-work.md`](how-routines-work.md) so you understand what a remote agent can and cannot do. Especially: **it has no access to your local machine, so any routine that needs local files is not a Claude Code trigger.**
 
-Each archetype below is a full trigger prompt, ready to paste. Each ships with `suggest` mode — auto-fix never runs unsupervised.
+Each archetype below is a full trigger prompt, ready to paste. Each ships with `suggest` mode: auto-fix never runs unsupervised.
 
 ---
 
-## Archetype 1 — Voice sweep (content operator) ✓ Claude Code trigger
+## Archetype 1: Voice sweep (content operator) ✓ Claude Code trigger
 
 **When the scan recommends this:** You edit markdown/MDX across 3+ repos. Shared patterns include `brand-config.json` or similar. Shell history shows `git status → edit → git diff → commit` sequences on content files 15+ times a month per repo.
 
@@ -47,7 +47,7 @@ For each attached repo, invoke the ritual-voice skill.
 ## Rules
 - Respect ritual.config.json → exemptPaths on every repo.
 - Never touch directories containing defense, darpa, bbn, rtx, classified.
-- Preserve direct quotes from named speakers — flag in notes, don't edit.
+- Preserve direct quotes from named speakers: flag in notes, don't edit.
 
 ## Termination
 After the summary is posted, stop. Do not continue into related work.
@@ -58,7 +58,7 @@ Do not call other routines.
 
 ---
 
-## Archetype 2 — Fact freshness digest ✓ Claude Code trigger
+## Archetype 2: Fact freshness digest ✓ Claude Code trigger
 
 **When the scan recommends this:** You have a mature `ritual.config.json` with 20+ `provenFacts` entries. Scan shows content files updated more often than the facts behind them.
 
@@ -83,10 +83,10 @@ For each fact:
 
 Emit a digest in this format:
 
-## Fact freshness — [repo name] — [YYYY-MM-DD]
+## Fact freshness: [repo name], [YYYY-MM-DD]
 
 ### Due for re-verification ([N] facts)
-- [claim] — verified [verifiedAt], source: [source]
+- [claim]: verified [verifiedAt], source: [source]
 - ...
 
 ### Still fresh ([N] facts)
@@ -106,7 +106,7 @@ After the digest is emitted, stop.
 
 ---
 
-## Archetype 3 — Dependency + security digest ✓ Claude Code trigger
+## Archetype 3: Dependency + security digest ✓ Claude Code trigger
 
 **When the scan recommends this:** You maintain 5+ repos with `package.json` / `requirements.txt` / `go.mod`. Scan shows dependency bumps happening manually and inconsistently. No GitHub Actions handling it yet.
 
@@ -152,7 +152,7 @@ After the summary is posted, stop.
 
 ---
 
-## Archetype 4 — Content calendar sync ✓ Claude Code trigger
+## Archetype 4: Content calendar sync ✓ Claude Code trigger
 
 **When the scan recommends this:** You track a content calendar in Notion, Google Sheets, or a markdown file. Scan shows a repeated Sunday/Monday pattern of "check what's shipping this week" manual reviews.
 
@@ -171,7 +171,7 @@ Disregard prior conversation state. Your scope is defined entirely below.
 ## Task
 Pull scheduled content items for the next 7 days from the Notion
 database at [NOTION_DATABASE_URL] (or the attached Drive sheet at
-[SHEET_URL] — one or the other, not both).
+[SHEET_URL], one or the other, not both).
 
 For each scheduled item:
 1. Check if a draft exists in the attached repo under /content or
@@ -182,7 +182,7 @@ For each scheduled item:
 
 Output a digest:
 
-## Week ahead — [this week's dates]
+## Week ahead: [this week's dates]
 
 ### Ready to ship ([N])
 - [date] · [title] · draft: ✓ · assets: ✓
@@ -209,7 +209,7 @@ After the digest is emitted, stop.
 
 ---
 
-## Archetype 5 — Inbox triage (Gmail-backed) ✓ Claude Code trigger
+## Archetype 5: Inbox triage (Gmail-backed) ✓ Claude Code trigger
 
 **When the scan recommends this:** Your shell history shows frequent pivots between email and code (dozens of `open mail.app` or browser tabs). Claude Code memory indicates "check emails" as a recurring task. You use Gmail.
 
@@ -232,14 +232,14 @@ the last 24 hours (label: UNREAD, in:inbox, newer_than:1d).
 For each thread:
 1. Read the latest message.
 2. Classify:
-   - "action-required" — a human is waiting on me
-   - "informational" — FYI, no action
-   - "discardable" — marketing, automated, ignorable
+   - "action-required": a human is waiting on me
+   - "informational": FYI, no action
+   - "discardable": marketing, machine-sent, ignorable
 3. Summarize the thread in one sentence.
 
 Emit a digest grouped by classification, newest first:
 
-## Inbox triage — [YYYY-MM-DD]
+## Inbox triage: [YYYY-MM-DD]
 
 ### Action required ([N])
 - [From] · [subject] · [1-sentence summary]
@@ -260,11 +260,11 @@ Emit a digest grouped by classification, newest first:
 After the digest is emitted, stop.
 ```
 
-**First-run expectation:** Expect noise on day one. Tune the prompt after a week — "treat these senders as automated," "always elevate threads from these domains," etc.
+**First-run expectation:** Expect noise on day one. Tune the prompt after a week: "treat these senders as bulk mail," "always surface threads from these domains," etc.
 
 ---
 
-## Archetype 6 — Deploy verification (GitHub Actions, NOT a Claude Code trigger)
+## Archetype 6: Deploy verification (GitHub Actions, NOT a Claude Code trigger)
 
 **Why not a Claude Code trigger:** Event-driven (fires on push to main). Claude Code triggers are cron-based. This pattern belongs in `.github/workflows/`.
 
@@ -291,7 +291,7 @@ Full example lives in [`docs/routines.md`](routines.md). If the scan recommends 
 
 ---
 
-## Archetype 7 — Local filesystem digest (launchd, NOT a Claude Code trigger)
+## Archetype 7: Local filesystem digest (launchd, NOT a Claude Code trigger)
 
 **Why not a Claude Code trigger:** Needs to read local filesystem (`~/brands/*/renders/`, local tool output, local notification script). Claude Code triggers run remotely with no local access.
 
@@ -301,7 +301,7 @@ If the scan recommends this pattern, the bootstrap will point you at:
 - A Python or shell script that does the filesystem walk
 - Optional iMessage via AppleScript for notifications
 
-The bootstrap will not draft the plist or script. It will tell you that the pattern belongs in local automation and link to Apple's launchd docs. This is honest scoping — forcing a Claude Code trigger for this pattern does not work.
+The bootstrap will not draft the plist or script. It will tell you that the pattern belongs in a local scheduled job and link to Apple's launchd docs. This is honest scoping: forcing a Claude Code trigger for this pattern does not work.
 
 ---
 
@@ -314,7 +314,7 @@ Read `~/ritual-patterns.json → top_5_recommendations[0]`. Match the shape:
 - Fires on repo events (PR open, push) → Archetype 6 (GitHub Actions)
 - Needs local machine access → Archetype 7 (launchd)
 
-If your top recommendation doesn't match any of these shapes, open an issue with the pattern JSON — that's signal that a new archetype should exist.
+If your top recommendation doesn't match any of these shapes, open an issue with the pattern JSON: that's signal that a new archetype should exist.
 
 ## What not to routine-ify (all contexts)
 

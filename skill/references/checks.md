@@ -1,14 +1,16 @@
-# Voice Lint Checks — Full Rule Set
+# Voice Lint Checks: Full Rule Set
 
 The six check classes, in priority order. Run all six. Report them in this order.
 
+Examples in this file use Northwind Studio, a fictional video studio, and its fictional founder Dana Okafor. The names and numbers are made up for illustration.
+
 ---
 
-## Priority 1 — Stale stats / outdated metrics
+## Priority 1: Stale stats / outdated metrics
 
 **What this catches:** Numbers and metrics in content that are either (a) older than the brand's `staleness.maxAgeDays`, (b) don't match the current verified value, or (c) contradict the `provenFacts` list.
 
-**Why it's P1:** Stale stats are worse than hype words because they're actively misleading. A blog post saying "75 subscribers" when the brand now has 400 makes the brand look inactive. A case study claiming "$200K raised" when the number is $500K sells the brand short.
+**Why it's P1:** Stale stats are worse than hype words because they're actively misleading. A blog post saying "75 subscribers" when the brand now has 400 makes the brand look inactive. A case study claiming "200 customers" when the number is 500 sells the brand short.
 
 ### Detection rules
 
@@ -16,11 +18,11 @@ The six check classes, in priority order. Run all six. Report them in this order
 
 2. For each claim:
    - Look up matching entries in `ritual.config.json → provenFacts`. Match on semantic similarity of the claim, not exact string.
-   - If no match found and `staleness.metricsRequireVerification` is `true`: flag as unverified (this overlaps with P2 — report under P1 if the file is older than maxAgeDays, under P2 otherwise).
+   - If no match found and `staleness.metricsRequireVerification` is `true`: flag as unverified (this overlaps with P2: report under P1 if the file is older than maxAgeDays, under P2 otherwise).
    - If match found but `verifiedAt` is older than `maxAgeDays`: flag as stale.
    - If match found and current verified value differs from content value: flag as outdated.
 
-3. Check file-level freshness using **git history, not filesystem mtime**. Filesystem mtime is unreliable — it resets on clone, on CI checkout, on any automated sync. Use git as the source of truth:
+3. Check file-level freshness using **git history, not filesystem mtime**. Filesystem mtime is unreliable: it resets on clone, on CI checkout, on any scripted sync. Use git as the source of truth:
 
    - For each content file, get the timestamp of the last commit that touched it:
      `git log -1 --format=%at -- <file>`
@@ -39,7 +41,7 @@ The six check classes, in priority order. Run all six. Report them in this order
 > Fix: Update to "400 subscribers" or pull the latest from the source.
 
 **Outdated file:**
-> `/case-studies/nvus-hearts.md` — last modified 92 days ago, contains 6 numeric claims.
+> `/case-studies/northwind-studio.md`: last modified 92 days ago, contains 6 numeric claims.
 > Fix: Full refresh pass. Flag for human review, don't auto-rewrite.
 
 **Unverified metric:**
@@ -56,7 +58,7 @@ Pull specificity from the proven fact. "Grown to 400" is fine. "Grown from 6 to 
 
 ---
 
-## Priority 2 — Missing specificity
+## Priority 2: Missing specificity
 
 **What this catches:** Claims without numbers, proof, or named subjects. The "we help founders grow their businesses" class of statement.
 
@@ -76,13 +78,13 @@ Trigger words that often precede vague claims:
 - "solutions," "results," "outcomes," "value"
 - "businesses," "founders," "teams," "organizations" (when ungrounded)
 
-A sentence passes if the claim is grounded even if one of the trigger words appears. "We helped Tyshaun Perryman ship 9 microsites in 60 days" contains "helped" but is specific.
+A sentence passes if the claim is grounded even if one of the trigger words appears. "We helped Dana Okafor ship 9 microsites in 60 days" contains "helped" but is specific.
 
 ### Violation examples
 
 **Vague benefit:**
 > "We help founders grow their brands."
-> Fix (suggest mode): "We run content infrastructure for 11 founder-led brands — voice extraction, Remotion video, automated publishing — in 30 minutes a week of founder time."
+> Fix (suggest mode): "Northwind Studio shipped 40 client videos in March. Scripts, edits and captions all ran from one config."
 
 **Ungrounded outcome:**
 > "Our clients see better engagement."
@@ -90,7 +92,7 @@ A sentence passes if the claim is grounded even if one of the trigger words appe
 
 **Abstract subject:**
 > "Businesses that partner with us scale faster."
-> Fix: "NVUS Hearts went from 6 to 400 subscribers in six months." Name them. Show it.
+> Fix: "Northwind Studio went from 6 to 400 YouTube subscribers in six months." Name them. Show it.
 
 ### Acceptable rewrites
 
@@ -98,9 +100,9 @@ Pull from `provenFacts` whenever possible. If no proven fact supports the claim,
 
 ---
 
-## Priority 3 — AI-slop markers
+## Priority 3: AI-slop markers
 
-**What this catches:** The specific linguistic tics that make copy read as AI-generated. These aren't banned because they're wrong — they're banned because they're *tells*.
+**What this catches:** The specific linguistic tics that make copy read as AI-generated. These aren't banned because they're wrong. They're banned because they're *tells*.
 
 **Why it's P3:** Copy that reads as AI-generated loses trust even when the content is accurate. Especially important for brands selling AI-adjacent services, where the copy has to prove the operator has taste.
 
@@ -161,7 +163,7 @@ Remove the tic. Don't replace it with a fancier construction. AI-slop is about s
 
 ---
 
-## Priority 4 — Hype words
+## Priority 4: Hype words
 
 **What this catches:** Unearned superlatives and empty intensifiers.
 
@@ -177,23 +179,23 @@ streamline, optimize, elevate, unleash, pioneering, groundbreaking,
 disruptive, scalable (when used as a filler adjective), powerful
 ```
 
-Merge with `ritual.config.json → voice.bannedWords`. Case-insensitive. Whole-word match only (don't flag "empowering" if "empower" is banned — flag it separately if the user added the -ing form).
+Merge with `ritual.config.json → voice.bannedWords`. Case-insensitive. Whole-word match only (don't flag "empowering" if "empower" is banned; flag it separately if the user added the -ing form).
 
 ### Detection rules
 
 1. Scan for exact matches (whole-word, case-insensitive).
 2. For each match, flag the sentence with the word highlighted.
-3. In "fix" mode, remove the hype word and reconstruct the sentence if needed. Don't substitute another word — usually the sentence is stronger without any adjective.
+3. In "fix" mode, remove the hype word and reconstruct the sentence if needed. Don't substitute another word: usually the sentence is stronger without any adjective.
 
 ### Violation examples
 
 **Hype word:**
 > "A comprehensive approach to brand voice."
-> Fix: "A brand voice system." (Drop the adjective. If the "comprehensive" is doing real work, replace with a specific number: "Voice guardrails for 11 client brands.")
+> Fix: "A brand voice system." (Drop the adjective. If the "comprehensive" is doing real work, replace with a specific number: "Voice rules checked on all 40 March videos.")
 
 **Multiple hype words:**
 > "Our innovative, scalable solution empowers founders to unlock their brand's full potential."
-> Fix: "We run content for 11 founder-led brands in 30 minutes of founder time per week." (Wholesale rewrite — the original is 0% substance.)
+> Fix: "Northwind Studio shipped 40 client videos in March with one editor." (Wholesale rewrite: the original is 0% substance.)
 
 ### Acceptable rewrites
 
@@ -201,11 +203,11 @@ When removing a hype word leaves the sentence broken, the fix is almost always t
 
 ---
 
-## Priority 5 — Name/attribution mismatches
+## Priority 5: Name/attribution mismatches
 
 **What this catches:** Inconsistent references to people, products, or brands within a single piece of content.
 
-**Why it's P5:** Annoying and unprofessional, but rarely misleading. The Tyshaun/Tye mismatch on the WhyStrohm homepage is the canonical example of this class.
+**Why it's P5:** Annoying and unprofessional, but rarely misleading. A founder called "Dana Okafor" in one paragraph and "Dee" in the next is the typical example of this class.
 
 ### Detection rules
 
@@ -221,17 +223,17 @@ When removing a hype word leaves the sentence broken, the fix is almost always t
 ### Violation examples
 
 **Inconsistent within file:**
-> Line 12: "Tyshaun Perryman, founder of Insightful Recovery..."
-> Line 490: "Tye and his team are..."
-> Fix: Use canonical form (Tyshaun) consistently, unless a section is explicitly informal/quoted.
+> Line 12: "Dana Okafor, founder of Northwind Studio..."
+> Line 490: "Dee and her team are..."
+> Fix: Use canonical form (Dana Okafor) consistently, unless a section is explicitly informal/quoted.
 
 **Wrong form in formal context:**
-> Testimonial attribution: "— Tye, Insightful Recovery"
-> Fix: "— Tyshaun Perryman, Founder, Insightful Recovery Solutions"
+> Testimonial attribution: "Dee, Northwind"
+> Fix: "Dana Okafor, Founder, Northwind Studio"
 
 **Possible misspelling:**
-> "Tyshuan Perryman" (edit distance 1 from canonical "Tyshaun")
-> Fix: Correct to "Tyshaun Perryman"
+> "Dana Okafur" (edit distance 1 from canonical "Dana Okafor")
+> Fix: Correct to "Dana Okafor"
 
 ### Acceptable rewrites
 
@@ -239,7 +241,7 @@ Always use the canonical form unless the context is explicitly informal (body of
 
 ---
 
-## Priority 6 — Generic corporate voice
+## Priority 6: Generic corporate voice
 
 **What this catches:** Passive voice, hedging, and vague benefit language. The stuff that isn't technically wrong but makes the brand sound like every other brand.
 
@@ -253,7 +255,7 @@ Always use the canonical form unless the context is explicitly informal (body of
 - CTA buttons and form labels
 - First sentence of any paragraph
 
-Body copy passive voice is fine — don't flag it unless it's dominant (>30% of sentences in a section).
+Body copy passive voice is fine: don't flag it unless it's dominant (>30% of sentences in a section).
 
 **Hedging in claims.** Flag:
 - "may," "might," "could potentially"
@@ -306,7 +308,7 @@ P6 fixes require the most judgment. In "suggest" mode, always propose the rewrit
 
 **Exempt directories.** Always respect `ritual.config.json → exemptPaths`. Default exempt paths are listed in the schema.
 
-**Config-less fallback.** If no config exists and the user insists on running the skill anyway, use defaults for P3 and P4 only. Skip P1, P2, P5, P6 — they require config data to be meaningful. Tell the user what was skipped and why.
+**Config-less fallback.** If no config exists and the user insists on running the skill anyway, use defaults for P3 and P4 only. Skip P1, P2, P5, P6: they require config data to be meaningful. Tell the user what was skipped and why.
 
 ## Mention vs. use detection (critical)
 
@@ -319,7 +321,7 @@ Content that discusses bad writing is not the same as content that commits bad w
 Anything between triple backticks, or inside single backticks, is code or a literal example. Do not scan these for voice violations.
 
 Examples that must be skipped:
-- `"delve"` — inline code
+- `"delve"`: inline code
 - ```
   const banned = ["comprehensive", "seamless"];
   ```

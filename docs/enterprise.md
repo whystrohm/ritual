@@ -4,11 +4,11 @@ A one-page brief for the security, IT, and compliance decision-makers reviewing 
 
 ## What Ritual is, technically
 
-Ritual is a **Claude Code skill** — a `.skill` file that is a zip archive containing markdown instructions and a JSON schema reference. When invoked inside Claude Code, it causes Claude to read and analyze content files in your repository against a brand-specific configuration.
+Ritual is a **Claude Code skill**: a `.skill` file that is a zip archive containing markdown instructions and a JSON schema reference. When invoked inside Claude Code, it causes Claude to read and analyze content files in your repository against a brand-specific configuration.
 
 Ritual has no executable code of its own. No binary, no package install, no network daemon, no dependency tree.
 
-The bootstrap scan is a **paste-in prompt** — a block of text you paste into Claude Code that asks Claude to read specific files in your home directory and write findings to `~/ritual-patterns.json`. It is not an installed tool; it runs once, inside your Claude Code session, on demand.
+The bootstrap scan is a **paste-in prompt**: a block of text you paste into Claude Code that asks Claude to read specific files in your home directory and write findings to `~/ritual-patterns.json`. It is not an installed tool; it runs once, inside your Claude Code session, on demand.
 
 ## What data Ritual reads
 
@@ -39,15 +39,15 @@ The skipped-path list is applied before any file is opened, so exempt content is
 
 ## What data leaves the machine
 
-Only content Claude Code would already be sending. Ritual is a skill — it structures Claude's behavior inside an existing Claude Code session. The files Claude reads during a Ritual run are subject to the same data posture as any other Claude Code interaction on your plan.
+Only content Claude Code would already be sending. Ritual is a skill: it structures Claude's behavior inside an existing Claude Code session. The files Claude reads during a Ritual run are subject to the same data posture as any other Claude Code interaction on your plan.
 
-The bootstrap scan writes its findings to `~/ritual-patterns.json` **locally**. No upload. If you choose to contribute a config example back to the Ritual repo, that is a manual pull request you create — nothing is pushed automatically.
+The bootstrap scan writes its findings to `~/ritual-patterns.json` **locally**. No upload. If you choose to contribute a config example back to the Ritual repo, that is a manual pull request you create: nothing is pushed for you.
 
 ## Fix mode and supervision
 
 The skill supports three modes: `flag`, `suggest`, `fix`. Fix mode applies rewrites directly to files. It exists for trusted, interactive use.
 
-**Routine runs default to `suggest` mode.** The recommended routine patterns in `docs/routines.md` produce draft pull requests — they never auto-merge, never commit to `main`, never push without a human in the loop.
+**Routine runs default to `suggest` mode.** The recommended routine patterns in `docs/routines.md` produce draft pull requests: they never auto-merge, never commit to `main`, never push without a human in the loop.
 
 If your organization wants to disable fix mode entirely, remove the fix-mode section from `skill/SKILL.md` and rebuild the `.skill` artifact. The skill will still support flag and suggest modes without further changes.
 
@@ -63,7 +63,7 @@ If your organization wants to disable fix mode entirely, remove the fix-mode sec
 
 ## Network posture
 
-Ritual makes no network calls on its own. The skill runs inside Claude Code's sandbox. Network calls that happen during a Ritual run are calls Claude Code itself would be making to reach Anthropic's API — the Ritual skill does not originate any of them.
+Ritual makes no network calls on its own. The skill runs inside Claude Code's sandbox. Network calls that happen during a Ritual run are calls Claude Code itself would be making to reach Anthropic's API: the Ritual skill does not originate any of them.
 
 The bootstrap scan runs shell commands (`rg`, `fd`, `git`, `jq`, `wc`, `find`, `history`) against the local filesystem. It does not call external services.
 
@@ -84,9 +84,9 @@ It does **not** contain credentials, API keys, or private URLs. A config file is
 
 ## Audit trail
 
-Every flagged violation in a Ritual report cites the priority class (P1–P6), the file and line, the matched text, and — for P1 and P2 — the `provenFacts` entry (or absence) that drove the flag. Reports are deterministic enough that the same content against the same config will produce substantially the same report across runs, with variance in phrasing of suggestions but not in what is flagged.
+Every flagged violation in a Ritual report cites the priority class (P1–P6), the file and line, the matched text, and, for P1 and P2, the `provenFacts` entry (or absence) that drove the flag. Reports are deterministic enough that the same content against the same config will produce substantially the same report across runs, with variance in phrasing of suggestions but not in what is flagged.
 
-For enterprise audit requirements, reports can be captured and stored alongside content. The recommended routine pattern in `docs/routines.md` opens a draft PR per run — the PR body is the persistent audit trail.
+For enterprise audit requirements, reports can be captured and stored alongside content. The recommended routine pattern in `docs/routines.md` opens a draft PR per run: the PR body is the persistent audit trail.
 
 ## Exempt paths in regulated environments
 
@@ -103,7 +103,7 @@ If your organization operates in regulated domains (defense, classified, healthc
 ]
 ```
 
-Matched paths are treated as prefixes. The skill skips them entirely — the contents of files under these paths are never opened and never sent to the model.
+Matched paths are treated as prefixes. The skill skips them entirely: the contents of files under these paths are never opened and never sent to the model.
 
 ## Vulnerability disclosure
 

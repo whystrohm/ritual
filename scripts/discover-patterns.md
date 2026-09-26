@@ -46,21 +46,21 @@ If you encounter a file you're unsure about, skip it and log it in the
    count, the contexts (which directories it was run in).
 
 2. Directory structures repeated across projects. If 5+ client repos all
-   have /assets/logos, /content/testimonials, /config/brand-config.json —
+   have /assets/logos, /content/testimonials, /config/brand-config.json,
    that's a pattern. Output the shared shape.
 
 3. File-name patterns across repos. If voice-lint.js appears in 3+ repos,
    or brand-config.json appears in 7+ repos, flag it.
 
 4. Git commit patterns. Look for "first 5 commits" that repeat across repos
-   — these are onboarding rituals. Also look for commit messages that
+  : these are onboarding rituals. Also look for commit messages that
    appear 5+ times across repos (the "fix the testimonial" class).
 
 5. Markdown section patterns. If /content/testimonials.md exists in
    multiple repos with similar section headers, that's a template.
 
 6. Config schema similarity. JSON/YAML configs with 60%+ overlapping keys
-   across different repos — these are candidate shared schemas.
+   across different repos: these are candidate shared schemas.
 
 7. Tools invoked together. If Remotion renders are always followed by a
    specific publish command, that's a workflow, not two separate steps.
@@ -90,7 +90,7 @@ Write the result to ~/ritual-patterns.json with this structure:
     {
       "pattern_id": "pattern-001",
       "rank": 1,
-      "rationale": "why this is the #1 thing to automate first",
+      "rationale": "why this is the #1 thing to hand off first",
       "implementation_sketch": "2-3 sentences on how"
     }
   ],
@@ -102,7 +102,7 @@ Write the result to ~/ritual-patterns.json with this structure:
 Then print to the console:
 1. Total patterns found
 2. Top 10 recommendations with one-line summaries
-3. Estimated total monthly time savings if all top 10 were automated
+3. Estimated total monthly time savings if all top 10 became routines
 4. Any gaps or blind spots you noticed during the scan
 ```
 

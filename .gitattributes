@@ -1,4 +1,4 @@
-# Ritual is a Claude Code skill — the primary artifact is markdown
+# Ritual is a Claude Code skill: the primary artifact is markdown
 # inside skill/ and docs/. Tell GitHub Linguist not to count the
 # installation tooling, test fixtures, or example configs as the
 # repo's primary language.
@@ -7,8 +7,8 @@ scripts/** linguist-detectable=false
 tests/**   linguist-detectable=false
 examples/** linguist-detectable=false
 
-# Treat the skill content itself as documentation (it is — SKILL.md
-# + references are prose instructions Claude reads, not code).
+# Treat the skill content itself as documentation. SKILL.md
+# and references are prose instructions Claude reads, not code.
 skill/**  linguist-documentation
 docs/**   linguist-documentation
 

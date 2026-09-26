@@ -44,9 +44,9 @@ Put the file at the root of any repo you want audited. The skill also looks in `
 
 Who this config is for.
 
-- `name` — canonical brand name. Used in report headers.
-- `tagline` — one sentence. Optional. Useful context for the skill when generating rewrites.
-- `tone` — short description of the voice. Not a style guide — a fingerprint. E.g., "direct, specific, no fluff" is better than three paragraphs of brand strategy.
+- `name`: canonical brand name. Used in report headers.
+- `tagline`: one sentence. Optional. Useful context for the skill when generating rewrites.
+- `tone`: short description of the voice. Not a style guide: a fingerprint. E.g., "direct, specific, no fluff" is better than three paragraphs of brand strategy.
 
 ### `canonicalNames`
 
@@ -68,7 +68,7 @@ Include misspellings your team tends to make. The skill uses edit distance to ca
 
 Drives P4 (hype words). Case-insensitive, whole-word match only.
 
-The skill ships with a default list (comprehensive, seamless, revolutionary, leverage, robust, etc.). Your list is added on top — it doesn't replace the defaults. Add words that are uniquely bad for your brand.
+The skill ships with a default list (comprehensive, seamless, revolutionary, leverage, robust, etc.). Your list is added on top: it doesn't replace the defaults. Add words that are uniquely bad for your brand.
 
 ### `voice.bannedPhrases`
 
@@ -87,13 +87,13 @@ Substitution map. When the skill rewrites in `suggest` or `fix` mode, it uses th
 }
 ```
 
-Only include substitutions that are always right for your brand. Don't add "customers" → "users" unless that's truly a blanket rule — otherwise you'll break legitimate uses.
+Only include substitutions that are always right for your brand. Don't add "customers" → "users" unless that's truly a blanket rule: otherwise you'll break legitimate uses.
 
 ### `voice.examples`
 
 Two to five sentences that exemplify your brand voice. Used as a style reference when the skill rewrites.
 
-These are not marketing copy. They're a fingerprint — the kind of sentences you'd write in a draft, not a tagline.
+These are not marketing copy. They're a fingerprint: the kind of sentences you'd write in a draft, not a tagline.
 
 Good:
 ```json
@@ -126,10 +126,10 @@ The most important section. A list of claims your brand has verified.
 ]
 ```
 
-- `claim` — what you're claiming, in the form you'd write it in copy
-- `verifiedAt` — when you last verified the number. ISO date format.
-- `source` — where the verification came from. A system of record, a report, a URL.
-- `brand` — optional. Use when one config covers multiple brand contexts.
+- `claim`: what you're claiming, in the form you'd write it in copy
+- `verifiedAt`: when you last verified the number. ISO date format.
+- `source`: where the verification came from. A system of record, a report, a URL.
+- `brand`: optional. Use when one config covers multiple brand contexts.
 
 When the skill finds a numeric claim in content, it checks against this list. Match found and recent → pass. Match found but old → P1 violation. No match → P1 or P2 depending on `staleness.metricsRequireVerification`.
 
@@ -137,8 +137,8 @@ The skill gets more valuable the more you invest here. Start with 3–5 facts. A
 
 ### `staleness`
 
-- `maxAgeDays` — default 30. How old a verification can be before the skill flags it as stale.
-- `metricsRequireVerification` — default `true`. If `true`, any number/metric in content must map to a proven fact, or it's flagged as unverified. If `false`, unverified numbers are allowed; only matched-but-stale ones are flagged.
+- `maxAgeDays`: default 30. How old a verification can be before the skill flags it as stale.
+- `metricsRequireVerification`: default `true`. If `true`, any number/metric in content must map to a proven fact, or it's flagged as unverified. If `false`, unverified numbers are allowed; only matched-but-stale ones are flagged.
 
 Start with `metricsRequireVerification: false` if you haven't populated `provenFacts` yet. Flip to `true` once your fact list is representative.
 
@@ -156,9 +156,9 @@ build/
 .git/
 ```
 
-Also automatically exempt: any path containing `defense`, `darpa`, `bbn`, `rtx`, `classified`, `itar`, `ear`.
+Also exempt by default: any path containing `defense`, `darpa`, `bbn`, `rtx`, `classified`, `itar`, `ear`.
 
-Add your own. If you work in a regulated space, list every directory the skill should not see. The skill treats these as a hard boundary — contents are never sent to the model.
+Add your own. If you work in a regulated space, list every directory the skill should not see. The skill treats these as a hard boundary: contents are never sent to the model.
 
 ## Minimal starter
 
@@ -184,7 +184,7 @@ Copy this into `ritual.config.json` at your repo root and edit:
 }
 ```
 
-You can run the skill against this — it'll use defaults for P3 and P4. You'll get more value as you fill in `provenFacts`, `canonicalNames`, and `examples`.
+You can run the skill against this: it'll use defaults for P3 and P4. You'll get more value as you fill in `provenFacts`, `canonicalNames`, and `examples`.
 
 ## Validating your config
 
@@ -192,4 +192,4 @@ You can run the skill against this — it'll use defaults for P3 and P4. You'll 
 python3 scripts/validate_config.py ritual.config.json
 ```
 
-Prints errors if the schema is malformed. CI runs this automatically on every PR.
+Prints errors if the schema is malformed. CI runs this on every PR.

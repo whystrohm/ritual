@@ -2,6 +2,8 @@
 
 The config file that drives this skill. Every brand using `brand-voice-lint` needs one.
 
+Examples in this file use Northwind Studio, a fictional video studio, and its fictional founder Dana Okafor. The names and numbers are made up for illustration.
+
 ## Location
 
 Place at repo root as `ritual.config.json`. Alternate locations checked by the skill:
@@ -14,9 +16,9 @@ Place at repo root as `ritual.config.json`. Alternate locations checked by the s
 ```json
 {
   "brand": {
-    "name": "string (required) — canonical brand name",
+    "name": "string (required): canonical brand name",
     "tagline": "string (optional)",
-    "tone": "string (optional) — short description, e.g. 'direct, specific, no fluff'"
+    "tone": "string (optional): short description, e.g. 'direct, specific, no fluff'"
   },
   "canonicalNames": {
     "[informal or variant name]": "canonical form"
@@ -34,10 +36,10 @@ Place at repo root as `ritual.config.json`. Alternate locations checked by the s
   },
   "provenFacts": [
     {
-      "claim": "75 subscribers on YouTube",
-      "verifiedAt": "2026-04-10",
-      "source": "YouTube Studio",
-      "brand": "NVUS Hearts"
+      "claim": "40 client videos shipped in March 2026",
+      "verifiedAt": "2026-04-02",
+      "source": "Northwind render log",
+      "brand": "Northwind Studio"
     }
   ],
   "staleness": {
@@ -64,15 +66,14 @@ Drives P5 (name/attribution) checks. Maps every informal or variant name to its 
 Example:
 ```json
 "canonicalNames": {
-  "Tye": "Tyshaun Perryman",
-  "Tyshaun": "Tyshaun Perryman",
-  "Perryman": "Tyshaun Perryman",
-  "Yurr": "Yuri Strohm",
-  "Yuri": "Yuri Strohm"
+  "Dee": "Dana Okafor",
+  "Dana": "Dana Okafor",
+  "Okafor": "Dana Okafor",
+  "Northwind": "Northwind Studio"
 }
 ```
 
-Note: the skill doesn't force every mention to use the canonical form — it flags *inconsistency* within a single piece of content. If a page uses both "Tye" and "Tyshaun," that's the violation.
+Note: the skill doesn't force every mention to use the canonical form. It flags *inconsistency* within a single piece of content. If a page uses both "Dee" and "Dana," that's the violation.
 
 ### `voice.bannedWords`
 Drives P4 (hype words). Case-insensitive. Default list applied on top of the brand's list:
@@ -114,14 +115,14 @@ Substitution map. When the skill rewrites, it uses these substitutions first.
 ```
 
 ### `voice.examples`
-2–5 sentences that exemplify the brand voice. Used as style reference when the skill generates rewrites. Keep these short and specific — they're not marketing copy, they're a fingerprint.
+2–5 sentences that exemplify the brand voice. Used as style reference when the skill generates rewrites. Keep these short and specific: they're not marketing copy, they're a fingerprint.
 
-Example for WhyStrohm:
+Example for Northwind Studio (fictional):
 ```json
 "examples": [
-  "30 minutes a week. One operator. No agency.",
-  "We built 800 videos from code. Here's what we learned.",
-  "Voice extraction, guardrails encoded in the repo, automated publishing. That's the whole system."
+  "Forty videos in March. One editor. No agency.",
+  "Every caption gets checked against the style file before it ships.",
+  "Scripts, edits and captions all run from one config. That's the whole system."
 ]
 ```
 
@@ -134,11 +135,11 @@ Drives P1 (stale stats) and P2 (specificity). A list of claims the brand has ver
 This is the single most important field. Brands that invest in keeping `provenFacts` updated get the most value from the skill.
 
 ### `staleness`
-- `maxAgeDays` — default 30. How old a proven fact can be before it's flagged as stale.
-- `metricsRequireVerification` — default `true`. If `true`, any number/metric in content must map to a proven fact. If `false`, unverified metrics are not flagged (P1 still runs on matched claims).
+- `maxAgeDays`: default 30. How old a proven fact can be before it's flagged as stale.
+- `metricsRequireVerification`: default `true`. If `true`, any number/metric in content must map to a proven fact. If `false`, unverified metrics are not flagged (P1 still runs on matched claims).
 
 ### `exemptPaths`
-Paths to skip entirely. Defaults shown above. Add per-brand exemptions here — e.g., a client working in defense would add `"defense/"`, `"darpa/"`, etc. Paths are matched as prefixes.
+Paths to skip entirely. Defaults shown above. Add per-brand exemptions here. For example, a client working in defense would add `"defense/"`, `"darpa/"`, etc. Paths are matched as prefixes.
 
 ## Minimal config (to get started)
 

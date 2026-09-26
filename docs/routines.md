@@ -39,7 +39,7 @@ For each attached repo, invoke the ritual-voice skill.
 ## Rules
 - Respect ritual.config.json → exemptPaths on every repo.
 - Never touch directories containing defense, darpa, bbn, rtx, classified.
-- Preserve direct quotes from named speakers — flag in notes, don't edit.
+- Preserve direct quotes from named speakers: flag in notes, don't edit.
 
 ## Termination
 After the summary is posted, stop. Do not continue into related work.
@@ -110,7 +110,7 @@ If clean, respond with:
 
 ## Rules
 - The caller expects a structured JSON response.
-- Do not open PRs or edit files — this is a check, not a fix.
+- Do not open PRs or edit files: this is a check, not a fix.
 - Respond within 60 seconds or the caller will treat it as a timeout.
 
 ## Termination
@@ -123,8 +123,8 @@ After returning the JSON response, stop.
 
 Ritual routines count against your Claude Code daily run limits:
 
-- **Pro:** 5 routine runs/day — room for one daily sweep plus a few API checks
-- **Max:** 15 routine runs/day — comfortable for daily sweeps across multiple brand repos plus ad-hoc API checks
+- **Pro:** 5 routine runs/day: room for one daily sweep plus a few API checks
+- **Max:** 15 routine runs/day: comfortable for daily sweeps across multiple brand repos plus ad-hoc API checks
 - **Team/Enterprise:** 25 routine runs/day
 
 A single sweep routine counts as one run regardless of how many repos are attached. API triggers count as one run per invocation.
@@ -144,7 +144,7 @@ If you run out of routine slots, scheduled sweeps will be rejected until the win
 1. Build the routine.
 2. Fire it manually (don't attach a schedule yet).
 3. Review the output. Does it catch what you expected? Does it flag false positives?
-4. Tune the skill's `ritual.config.json` — not the routine prompt.
+4. Tune the skill's `ritual.config.json`: not the routine prompt.
 5. Fire manually again.
 6. Once you trust it, add the schedule.
 

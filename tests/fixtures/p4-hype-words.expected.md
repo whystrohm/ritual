@@ -1,4 +1,4 @@
-# Expected Output — p4-hype-words.md
+# Expected Output: p4-hype-words.md
 
 ## Summary
 - Total violations: 10+
@@ -7,7 +7,7 @@
 
 ## Violations (P4 primary)
 
-P4 — Hype words
+P4: Hype words
   L1 comprehensive, seamless
   L1 revolutionary, game-changing, empower, unlock, cutting-edge
   L3 leverage, innovative

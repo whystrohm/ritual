@@ -17,7 +17,7 @@ These are intentionally imperfect content files used to verify that `ritual-voic
 
 ## How to use
 
-These are for manual verification today. Run the skill against each fixture in a Claude Code session and compare the output against the fixture's `expected.md`. A fully-automated runner that validates skill output against expectations is on the roadmap once Claude Code exposes a stable programmatic skill-invocation API.
+These are for manual verification today. Run the skill against each fixture in a Claude Code session and compare the output against the fixture's `expected.md`. A scripted runner that validates skill output against expectations is on the roadmap once Claude Code exposes a stable programmatic skill-invocation API.
 
 ```bash
 # In Claude Code, in this repo:
@@ -33,4 +33,4 @@ If you find a case the skill misses, add a fixture:
 2. Create `tests/fixtures/<name>.expected.md` describing what the skill should flag
 3. Open a PR with a one-line description of the class of bug
 
-Fixtures are load-bearing documentation — they show what the skill is supposed to do better than any prose can.
+Fixtures are load-bearing documentation: they show what the skill is supposed to do better than any prose can.

@@ -1,38 +1,38 @@
 # What Ritual Will Not Do
 
-An honest scoping document. Every content-audit tool drifts toward "trust me" marketing — this one commits to the opposite. The clearer the scope, the more useful the tool.
+An honest scoping document. Every content-audit tool drifts toward "trust me" marketing: this one commits to the opposite. The clearer the scope, the more useful the tool.
 
 ## Ritual will not write content
 
-Ritual is an audit skill, not a generative one. It can propose rewrites in `suggest` and `fix` modes, but those rewrites are constrained by the config's `provenFacts` and `voice.examples` — the skill does not invent claims, generate proof, or produce original copy.
+Ritual is an audit skill, not a generative one. It can propose rewrites in `suggest` and `fix` modes, but those rewrites are constrained by the config's `provenFacts` and `voice.examples`: the skill does not invent claims, generate proof, or produce original copy.
 
 If you want a generative skill ("write me a blog post in this brand voice"), that is a different skill and not in this repo.
 
 ## Ritual will not replace an editor
 
-A human editor makes structural decisions: does the argument hold, is the story clear, does the opening earn its place. Ritual operates below that layer — it enforces that individual claims have receipts and individual sentences don't drift into AI-slop. The strategic edit is a human job.
+A human editor makes structural decisions: does the argument hold, is the story clear, does the opening earn its place. Ritual operates below that layer: it enforces that individual claims have receipts and individual sentences don't drift into AI-slop. The strategic edit is a human job.
 
 Use Ritual to catch the class of errors a careful editor would flag on a third pass. Do not use it in place of the first two passes.
 
 ## Ritual will not catch claims the config does not know about
 
-The skill is only as good as `ritual.config.json`. If your content makes a claim and no entry in `provenFacts` supports or contradicts it, the skill will flag it as unverified (with `metricsRequireVerification: true`) or pass it through (with the flag `false`). It will not go fetch the truth — that is your responsibility.
+The skill is only as good as `ritual.config.json`. If your content makes a claim and no entry in `provenFacts` supports or contradicts it, the skill will flag it as unverified (with `metricsRequireVerification: true`) or pass it through (with the flag `false`). It will not go fetch the truth: that is your responsibility.
 
 Garbage config in, garbage audit out.
 
 ## Ritual will not verify facts against the live internet
 
-`provenFacts` is a local record of claims you verified elsewhere. The skill does not call external APIs to check numbers against analytics dashboards, CRM systems, or public sources. If a number in a proven fact is wrong, the skill will pass content that matches it — because the skill trusts the config.
+`provenFacts` is a local record of claims you verified elsewhere. The skill does not call external APIs to check numbers against analytics dashboards, CRM systems, or public sources. If a number in a proven fact is wrong, the skill will pass content that matches it: because the skill trusts the config.
 
 This is a deliberate trust model: the config is the source of truth, because anything else requires trust in an external system that may be wrong, down, or out of scope.
 
 ## Ritual will not understand context beyond the file
 
-Voice consistency inside a single file: yes. Voice consistency across a whole brand's content corpus: partial — the skill reads the config, not the corpus. If your homepage uses "Tyshaun" and your blog uses "Tye" and the two files are never linted together, the skill will not catch the cross-file inconsistency. (A scheduled routine that sweeps both files catches it.)
+Voice consistency inside a single file: yes. Voice consistency across a whole brand's content corpus: partial: the skill reads the config, not the corpus. If your homepage uses "Dana" and your blog uses "Dee" and the two files are never linted together, the skill will not catch the cross-file inconsistency. (A scheduled routine that sweeps both files catches it.)
 
 ## Ritual will not substitute for brand strategy
 
-Ritual enforces voice. It does not design voice. If you don't know what your voice should be, the skill has no opinion — it just reads the rules you write. If you write weak rules, you will get weak audits.
+Ritual enforces voice. It does not design voice. If you don't know what your voice should be, the skill has no opinion: it just reads the rules you write. If you write weak rules, you will get weak audits.
 
 The work upstream of Ritual is voice extraction: deciding what your brand sounds like, what words are off-limits, what claims you can back up. Ritual takes it from there.
 
@@ -46,7 +46,7 @@ Ritual becomes more valuable as your config matures. A three-month-old config wi
 
 The checks are judgment calls expressed in natural language and executed by Claude. Two runs against the same content with the same config will produce substantially similar reports, but not identical ones. The priority ordering is stable. The flagged violations are stable. The wording of suggestions varies.
 
-If you need deterministic output for compliance or audit, capture the structured report fields (priority, file, line, quoted text) — those are stable. Do not treat the suggested rewrites as a deterministic artifact.
+If you need deterministic output for compliance or audit, capture the structured report fields (priority, file, line, quoted text): those are stable. Do not treat the suggested rewrites as a deterministic artifact.
 
 ## Ritual will not replace Grammarly, Hemingway, or a style guide
 
@@ -54,7 +54,7 @@ Those tools check grammar, readability, and style. Ritual checks claims against 
 
 ## Ritual will not auto-fix in a routine
 
-Fix mode exists in the skill. Routine prompts in `docs/routines.md` explicitly default to `suggest` mode. This is a deliberate choice — auto-fix on a scheduled run is a supply-chain vector into your brand's published content, and we will not ship a recommendation that encourages it. If you route around this in your own routine, you own the outcome.
+Fix mode exists in the skill. Routine prompts in `docs/routines.md` explicitly default to `suggest` mode. This is a deliberate choice: auto-fix on a scheduled run is a supply-chain vector into your brand's published content, and we will not ship a recommendation that encourages it. If you route around this in your own routine, you own the outcome.
 
 ## Ritual will not read across repositories on its own
 
@@ -62,7 +62,7 @@ A single skill invocation scans a single file, directory, or URL. Cross-repo swe
 
 ## Ritual will not track what was fixed and what was ignored
 
-There is no persistent "dismissed violations" store. If you ignore a flag once, it will fire again on the next run unless you fix the content or add a provenFact that covers it. This is deliberate — a dismissal store would become stale and silently hide issues.
+There is no persistent "dismissed violations" store. If you ignore a flag once, it will fire again on the next run unless you fix the content or add a provenFact that covers it. This is deliberate: a dismissal store would become stale and silently hide issues.
 
 ## Ritual will not keep secrets
 

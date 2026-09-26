@@ -17,7 +17,7 @@ With this minimal setup, the skill runs:
 - **P4** (hype words) with defaults plus your `bannedWords`
 - **P6** (generic corporate voice) with defaults
 
-P1 (stale stats), P2 (specificity), and P5 (name mismatches) need you to populate `provenFacts` and `canonicalNames` to be fully useful. Start empty — they still run, they just have less to compare against.
+P1 (stale stats), P2 (specificity), and P5 (name mismatches) need you to populate `provenFacts` and `canonicalNames` to be fully useful. Start empty: they still run, they just have less to compare against.
 
 ## When to graduate to a richer config
 

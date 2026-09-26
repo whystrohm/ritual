@@ -5,16 +5,11 @@
     "tone": "direct, specific, no fluff. short sentences. numbers over adjectives."
   },
   "canonicalNames": {
-    "Tye": "Tyshaun Perryman",
-    "Tyshaun": "Tyshaun Perryman",
-    "Perryman": "Tyshaun Perryman",
     "Yurr": "Yuri Strohm",
     "Yuri": "Yuri Strohm",
     "Strohm": "Yuri Strohm",
-    "IRS": "Insightful Recovery Solutions",
-    "ISAI": "Innovation Synergy AI",
-    "WAA": "Winnin Against Addiction",
-    "NVUS": "NVUS Hearts"
+    "Why Strohm": "WhyStrohm",
+    "Whystrohm": "WhyStrohm"
   },
   "voice": {
     "bannedWords": [
@@ -67,27 +62,14 @@
     },
     "examples": [
       "30 minutes a week. One operator. No agency.",
-      "Voice extraction, guardrails encoded in the repo, automated publishing. That's the whole system.",
-      "Eleven brands built and running."
+      "Voice extraction and guardrails encoded in the repo. That's the whole system."
     ]
   },
   "provenFacts": [
     {
-      "claim": "Managed content infrastructure starting at $3,000/month",
-      "verifiedAt": "2026-04-17",
-      "source": "whystrohm.com — published pricing on homepage and multiple blog posts",
-      "brand": "WhyStrohm"
-    },
-    {
-      "claim": "Eleven founder-led brands built and running",
-      "verifiedAt": "2026-04-17",
-      "source": "whystrohm.com — homepage proof section; four named clients visible in logo strip (Insightful Recovery Solutions, Innovation Synergy AI, NVUS Hearts, Winnin' Against Addiction)",
-      "brand": "WhyStrohm"
-    },
-    {
       "claim": "30 minutes per week of founder time",
       "verifiedAt": "2026-04-17",
-      "source": "whystrohm.com — offer description in homepage hero and CTA sections",
+      "source": "whystrohm.com, offer description in homepage hero and CTA sections",
       "brand": "WhyStrohm"
     }
   ],

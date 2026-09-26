@@ -40,12 +40,12 @@ body:
     attributes:
       label: Which priority was involved?
       options:
-        - P1 — Stale stats
-        - P2 — Missing specificity
-        - P3 — AI-slop markers
-        - P4 — Hype words
-        - P5 — Name/attribution mismatches
-        - P6 — Generic corporate voice
+        - "P1: Stale stats"
+        - "P2: Missing specificity"
+        - "P3: AI-slop markers"
+        - "P4: Hype words"
+        - "P5: Name/attribution mismatches"
+        - "P6: Generic corporate voice"
         - Not priority-specific
     validations:
       required: true
